@@ -1,0 +1,170 @@
+{% extends "../base.html" %}
+{% load static %}
+
+
+{% block work %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'work.css' %}">
+
+<div class="workPage">
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <div class="madal-title"><h1 class="title-blok mt-3 ml-3">Добавление директивы</h1></div>
+              </div>
+              
+                <form action="" method="post">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <label for="input">Введите название директивы. Разрешены только латинские буквы и нижние подчеркивания!</label>
+                        {{form.name}}
+                        <label for="input" class="mt-3">Введите описание(которое удобно вам)</label>
+                        {{form.desc}}
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default mt-3" data-dismiss="modal">Назад</button>
+                        <button type="submit" name="directive" class="btn btn-primary mt-3">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    <div class="nav-bar">
+        <ul>
+            <li class="navItem" id="newDoc"><a href="/work/newDoc">Новый договор</a></li>
+            <li class="navItem" id="signature"><a href="/work/signature">Подписаные</a></li>
+            <li class="navItem" id="templates"><a href="/work/templates">Шаблоны</a></li>
+            <li class="navItem" id="settings"><a href="/work/settings">Настройки и профиль</a></li>
+        </ul>
+    </div>
+
+    <div class="row">
+
+        <div class="col">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="row" style="margin-left: 150px;">
+                <div class="col-6">
+                    <h1 class="organisation-h1">{{name}}</h1>
+                </div>
+                <div class="col">
+
+                    <div class="row" style="margin-right: 50px;">
+                        <div class="col">
+                            <button name="editor_btn" type="submit" id="submit" class="mt-5" style="color: #fff; background-color: #3333a9; border-radius: 25px; width: 150px; height: 50px; font-weight: bold;" onclick="document.getElementById('edit').value = myEditor.getData();">Сохранить</button>
+                        </div>
+                        <div class=" mt-5">
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <button type="submit" name="signature" id="signature" style="color: #fff; background-color: #3333a9; border-radius: 25px; width: 150px; height: 50px; font-weight: bold;" onclick="document.getElementById('template').value = myEditor.getData();">Выставить на подпись</button>
+                                <input style="width: 0; height: 0; visibility: hidden;" name="template" id="template" type="text">
+                            </form>
+                        </div>
+                    </div>
+                
+                    <input name="editor" id="edit" type="text" style="visibility: hidden;">
+
+                </div><hr>
+            </div>
+
+                    <div class="edit-blok" style="width: 750px; margin: 30px 20%;">
+                        <div class="editor" id="editor" name='editor' contenteditable="true" data-gramm="false">
+                            {% autoescape off %}
+                            {{texts}}
+                            {% endautoescape %}
+                        </div>
+                    </div>
+                </div>
+
+        <div class="col-4">
+
+            <div class="row">
+                <div class="col">
+                    <h1 style="margin-top: 50px; font-size: x-large;">Мои директивы</h1>
+                </div>
+                <div class="col">
+                    <button type="button" class="nav-link nav-text mt-5" style="color: #fff; background-color: #3333a9; border-radius: 25px; width: 150px; height: 50px; font-weight: bold; text-align: center;" data-toggle="modal" data-target="#myModal">Добавить</button>
+                </div>
+            </div>
+            <ul>
+            {% for directive in directives %}
+
+            <button class="btn" type="button" data-toggle="modal" data-target="#myModal1" 
+            onclick="document.getElementById('name1').value = '{{directive.name}}'; document.getElementById('desc1').value = '{{ directive.desc }}'; document.getElementById('id_directive').value = '{{ directive.id }}';"
+            >
+                <li>
+                    <h6>{{ open }}{{ directive.name }}{{ close }}</h6>
+                    <p>{{directive.desc}}</p>
+                </li>
+            </button>
+            </ul>
+            {% endfor %}
+
+            {% for directive in system_directives %}
+                <li>
+                    <h6>{{ open }}{{ directive.name }}{{ close }}</h6>
+                    <p>{{directive.desc}}</p>
+                </li>
+            </ul>
+            {% endfor %}
+
+            <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <div class="madal-title"><h1 class="title-blok mt-3 ml-3">Добавление директивы</h1></div>
+                      </div>
+                      
+                        <form action="" method="post">
+                            <div class="modal-body">
+                                {% csrf_token %}
+                                <label for="input">Введите название директивы. Разрешены только латинские буквы и нижние подчеркивания!</label>
+                                <input type='text' class='form-control' placeholder='Название директивы' name= 'name' id='name1'>
+                                <label for="input" class="mt-3">Введите описание(которое удобно вам)</label>
+                                <textarea type='text' class='form-control' placeholder='Описание директивы' name= 'desc' id='desc1'></textarea>
+                                <input type='text' name= 'id' id='id_directive' style="visibility: hidden;">
+                            </div>
+        
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Назад</button>
+                                <button type="submit" name="directive_delete" class="btn btn-primary mt-3">Удалить</button>
+                                <button type="submit" name="directive_edit" class="btn btn-primary mt-3">Сохранить</button>
+                            </div>
+                        </form>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+        </div>
+
+        </form>
+   </div>
+
+
+</div>
+  <script src="https://cdn.ckeditor.com/ckeditor5/30.0.0/classic/ckeditor.js"></script>
+  <script>
+    var myEditor;
+    ClassicEditor
+        .create( document.querySelector( '#editor' ) ).then(
+            editor => {
+                myEditor = editor;
+            }
+        )
+        .catch( error => {
+            console.error( error );
+        } );
+
+       document.getElementById('btn1').addEventListener('click', function() {
+           content = CKEDITOR.instances.editor.getData()
+           console.log(content);
+       }, false);
+   </script>
+
+{% endblock work %}

@@ -1,0 +1,39 @@
+{% extends "../base.html" %}
+{% load static %}
+
+
+{% block work %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'work.css' %}">
+
+<div class="workPage">
+
+    {% if user.organisation != None %}
+        <div class="nav-bar">
+            <ul>
+                <li class="navItem" id="newDoc"><a href="/work/newDoc">Новый договор</a></li>
+                <li class="navItem" id="signature"><a href="/work/signature">Подписаные</a></li>
+                <li class="navItem" id="templates"><a href="/work/templates">Шаблоны</a></li>
+                <li class="navItem" id="settings"><a href="/work/settings">Настройки и профиль</a></li>
+            </ul>
+        </div>
+    {% endif %}
+
+    {% if user.organisation == None %}
+        <div class="nav-bar">
+            <ul>
+                <li class="navItem" id="signature"><a href="/work/signature">Подписаные</a></li>
+                <li class="navItem" id="settings"><a href="/work/settings">Настройки и профиль</a></li>
+            </ul>
+        </div>
+    {% endif %}
+
+    <div style="margin: 25px auto; width: 750px; border: 2px solid #0e1f4d; border-radius: 10px; padding: 25px;">
+        {% autoescape off %}
+            {{text}}
+            <img src="{% static 'img/signed.png' %}" alt="">
+        {% endautoescape %}
+    </div>
+
+   </div>
+{% endblock work %}

@@ -1,0 +1,121 @@
+{% extends "../base.html" %}
+
+{% load static %}
+
+{% block main %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link href="{% static 'accounts.css' %}" rel="stylesheet" type="text/css" />
+
+<div style="margin-top: 150px;">
+    <h1 class="sing-h1">Регистрация</h1>
+
+    <ol class="c-stepper ">
+        <li class="c-stepper__item">
+            <h3 class="c-stepper__title digit active">1</h3>
+            <p class="c-stepper__desc mt-3">Личная информация</p>
+        </li>
+        <li class="c-stepper__item">
+            <h3 id="2" class="c-stepper__title digit active">2</h3>
+            <p class="c-stepper__desc mt-3">Паспортные данные</p>
+        </li>
+        <li class="c-stepper__item">
+            <h3 id="3" class="c-stepper__title digit">3</h3>
+            <p class="c-stepper__desc mt-3">Информация об организации</p>
+        </li>
+    </ol>
+
+    <div class="row align-items-center">
+        <div class="col-offset-8 mx-auto mt-3">
+            <form action="" method="post">
+                {% csrf_token %}
+
+                {% if step == 1 %}
+                    <label for="input">ФИО</label>
+                    {{form.name}}<br>
+                    <label for="input">Номер телефона</label>
+                    {{form.phone}}<br>
+                    <label for="input">E-mail</label>
+                    {{form.email}}<br>
+                    <button class="next" type="sumbit" name="2">Далее</button>
+                    <script>document.getElementById("2").classList.remove('active');
+                    document.getElementById("3").classList.remove('active');</script>
+                {% endif %}
+
+                {% if step == 2 %}
+                    <label for="input">Паспортные данные</label>
+                    {{form.pasport}}<br>
+                    {{form.pasport_otdel}}<br>
+                    {{form.pasport_code}}<br>
+                    {{form.date_pasport}}<br>
+                    <label for="input">Место регистрации</label>
+                    {{form.registr}}<br>
+                    <label for="input">Дата рождения</label>
+                    {{form.date_burn}}<br>
+                    <button class="next" type="button" onclick="window.location.href = 'javascript:history.back()';">Назад</button>
+                    <button class="next" type="submit" name="3">Далее</button>
+                    <script>document.getElementById("2").classList.add('active');</script>
+                    <div class="none" style="visibility: hidden;">
+                        {{form.name}}
+                        {{form.phone}}
+                        {{form.email}}
+                    </div>
+                {% endif %}
+                
+                {% if step == 3 %}
+                  <label for="input">Полное наименование организации</label>
+                    {{form.organisation}}<br>
+                    <div class="row">
+                        <div class="col">
+                            <label for="input">ИНН</label>
+                            {{form.inn}}<br>
+                    <label for="input">Название банка</label>
+                    {{form.name_bank}}<br>
+                    <label for="input">Счёт</label>
+                    {{form.schet}}<br>
+                        </div>
+                        <div class="col">
+                            <label for="input">ОГРН</label>
+                            {{form.ogrn}}<br>
+                    <label for="input">БИК банка</label>
+                    {{form.bik}}<br>
+                    <label for="input">Корпоративный счёт</label>
+                    {{form.korp_schet}}<br>
+                        </div>
+                    </div>
+                    
+                    
+                    <button class="next" onclick="window.location.href = 'javascript:history.back()';">Назад</button>
+                    <button style="width: 200px;" class="next" type="submit" name="4">Далее</button>
+                    <script>document.getElementById("3").classList.add('active');</script>
+                    <div class="none" style="visibility: hidden;">
+                        {{form.name}}
+                        {{form.phone}}
+                        {{form.email}}
+                        {{form.pasport}}
+                        {{form.pasport_otdel}}
+                        {{form.pasport_code}}
+                        {{form.date_pasport}}
+                        {{form.registr}}
+                        {{form.date_burn}}
+                    </div>
+                {% endif %}
+
+                {% if step == 4 %}
+                    <label for="input">На ваш номер отправлено смс с кодом. Введите его для завершения регистрации</label>
+                    <div style="margin-left: 220px;">
+                        <input type="text" class="form-control" name="sms" style="width: 200px;" placeholder="Код из СМС">
+                        <button class="next mt-5" type="sumbit" name="5">Далее</button>
+                    </div>
+
+                    <div class="none" style="visibility: hidden;">
+                        {{form.phone}}
+                    </div>
+
+                {% endif %}
+
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock main %}

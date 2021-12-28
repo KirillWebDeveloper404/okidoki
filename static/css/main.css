@@ -1,0 +1,164 @@
+body {
+    font: 12pt "Gilroy", sans-serif;
+    min-height: 100%;
+}
+
+* {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    box-sizing: border-box;
+    outline: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mainPage {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 0 30px;
+    background: linear-gradient(
+180deg, #284BB7 0%, #1A1C93 100%);
+    color: #fff;
+    overflow: auto;
+    align-items: center;    
+}
+
+/* NavBar */
+
+
+/* MainContent */
+
+.mainPage .headers-container {
+    width: 100%;
+    max-width: 1000px;
+    text-align: center;
+    margin-top: 200px;
+}
+
+.mainPage .headers-container h1 {
+    font-size: 34.5pt;
+    font-weight: bold;
+}
+.mainPage .headers-container h2 {
+    font-size: 12pt;
+    line-height: 1.5em;
+    font-weight: 100;
+    max-width: 650px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
+.mainPage button.get-started-button {
+    width: auto;
+    height: 60px;
+    margin: 50px auto;
+    background: #fff;
+    box-shadow: none;
+    color: #3333a9;
+    flex-shrink: 0;
+    border-radius: 15px;
+    min-width: 180px;
+    font-size: medium;
+}
+
+.mainPage img.bg-vector-1 {
+    top: 0;
+    left: 0;
+    height: 20%;
+}
+
+.mainPage img.bg-vector-1, .mainPage img.bg-vector-2 {
+    position: fixed;
+    width: auto;
+    opacity: .35;
+    pointer-events: none;
+}
+
+.mainPage img.bg-vector-2 {
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    -webkit-transform: translateY(35%);
+    transform: translateY(35%);
+}
+
+.mainPage img.bg-vector-2 {
+    position: fixed;
+    width: auto;
+    opacity: .35;
+    pointer-events: none;
+}
+
+@media screen and (max-width: 980px) {
+    .mainPage {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        padding: 0 30px;
+        background: linear-gradient(
+    180deg, #284BB7 0%, #1A1C93 100%);
+        color: #fff;
+        overflow: auto;
+        align-items: center;
+    }
+    .mainPage .headers-container {
+        width: 100%;
+        max-width: 1000px;
+        text-align: center;
+        margin-top: 500px;
+    }
+    .mainPage .headers-container h1 {
+        font-size: 60pt;
+        font-weight: bold;
+    }
+    .mainPage .headers-container h2 {
+        font-size: 30pt;
+        line-height: 1.5em;
+        font-weight: 100;
+        max-width: 650px;
+        margin: 0 auto;
+        margin-top: 50px;
+    }
+    .mainPage .nav-button {
+        border: 0px;
+        padding-right: 30px;
+        font-size: medium;
+        background: #2339aa;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 20px 25px rgb(0 0 0 / 10%), 0 10px 10px rgb(0 0 0 / 4%);
+        width: 100px;
+    }
+    
+    .base-nav-button {
+        width: 100px;
+        border: 0px;
+        background-color: #fff;
+        padding-right: 30px;
+        font-size: medium;
+    }
+    .mainPage button.get-started-button {
+        width: 350px;
+        height: 100px;
+        margin: 50px auto;
+        background: #fff;
+        box-shadow: none;
+        color: #3333a9;
+        flex-shrink: 0;
+        border-radius: 25px;
+        min-width: 180px;
+        font-size: xx-large;
+    }
+    .nav-menu {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 50px;
+        border: 5px solid #fff;
+        border-radius: 50%;
+        font-size: 30pt;
+        border-color: #fff;
+    }
+}

@@ -1,0 +1,17 @@
+{% extends "../base.html" %}
+{% load static %}
+
+
+{% block main %}
+<link rel="stylesheet" href="{% static 'accounts.css' %}">
+
+<div class="form">
+    <form action="" method="post">
+      {% csrf_token %}
+      <p>Код подтверждения отправлен на номер:<br><strong>{{phone}}</strong><br>Введите его чтобы войти</p>
+      <input type="code" placeholder="Код из смс"><br>
+      <button class="next mt-3" type="sumbit" name="2">Войти</button>
+  </form>
+</div>
+  
+{% endblock main %}

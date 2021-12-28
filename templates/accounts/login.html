@@ -1,0 +1,37 @@
+{% extends  '../base.html' %}
+{% load static %}
+
+{% block main %}
+<link href="{% static 'accounts.css' %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    
+{% if sms == False %}
+  
+    <div class="sing-h1 mt-5" style="font-size: 15pt;">
+        <form action="" method="post">
+            {% csrf_token %}
+            <h1 class="sing-h1">Вход</h1>
+            <input type="text" class="form-control mt-3" name="phone" style="width: 300px; display: block; margin-left: auto; margin-right: auto;" placeholder="Номер телефона">
+            <p style="font-size: 9pt;">Нет аккаунта? <a href="/accounts/register/">Создайте его!</a></p>
+            <button class="next" type="sumbit" name="num">Далее</button>
+        </form>
+    </div>
+
+{% endif %}
+
+{% if sms == True %}
+    
+    <div class="sing-h1 mt-5" style="font-size: 15pt;">
+        <form action="" method="post">
+            {% csrf_token %}
+            <h1 class="sing-h1">Вход</h1>
+            <p style="font-size: 11pt;">На указаный вами номер отправлено смс с кодом</p>
+            <input type="text" class="form-control mt-3" name="sms" style="width: 300px; display: block; margin-left: auto; margin-right: auto;" placeholder="Код из СМС">
+            <button class="next mt-3" type="sumbit"style="width: 300px; display: block; margin-left: auto; margin-right: auto;" name="code">Войти</button>
+            <input type="text" name="phone" style="visibility: hidden;" value={{phone}}>
+        </form>
+    </div>
+
+{% endif %}
+
+{% endblock %}

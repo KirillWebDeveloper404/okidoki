@@ -1,0 +1,67 @@
+.workPage {
+    margin-top: 150px;
+}
+
+/* nav */
+
+.nav-bar .navItem a {
+    color: #0e1f4d;
+}
+
+.nav-bar {
+    display: inline;
+    margin-bottom: 40px;
+    grid-gap: 50px;
+    gap: 50px;
+    white-space:nowrap;
+    text-align: center;
+}
+
+.navItem {
+    display: inline;
+    flex: 1 1;
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+    text-align: center;
+    font-weight: 700;
+    color: #0e1f4d;
+    border-bottom: 2px solid #e9ecf7;
+    padding: 15px 10px;
+    white-space: nowrap;
+    transition: .32s;
+    margin-left: 100px;
+}
+
+.navItemActive {
+    border-color: #0e1f4d;
+}
+
+@media (max-width: 980px) {
+    .nav-bar {
+        display: inline;
+        margin-bottom: 40px;
+        grid-gap: 50px;
+        gap: 50px;
+        white-space:nowrap;
+    }
+}
+
+/* settings */
+.organisation-h1 {
+    font-weight: bold;
+    font-size: xx-large;
+    margin-top: 50px;
+    margin-left: 25%;
+}
+.profile-info {
+    margin: 0 25%;
+}
+.title-blok {
+    font-weight: bold;
+    font-size: large;
+}
+
+/* templates */
+.templateItem {
+    width: 750px;
+}
