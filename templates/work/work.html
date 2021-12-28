@@ -80,7 +80,8 @@
     <div style="margin: 25px auto;">
         {% for signature in signatures %}
             {% for el in signature %}
-                <a href="/work/viewSignature/{{el.id}}">
+            {% if el.name %}
+              <a href="/work/viewSignature/{{el.id}}">
                     <div class="card" style="width: 750px; margin: 5px 25%; border: #3333a9 solid 2px; border-radius: 10px;">
                         <div class="card-body">
                         <h6 style="color: #3333a9;">Название: {{el.name}}</h6>
@@ -88,6 +89,7 @@
                         </div>
                     </div>
                 </a>
+            {% endif %}
             {% endfor %}
         {% endfor %}
     </div>

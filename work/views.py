@@ -39,24 +39,23 @@ def work(req, page):
         for template in user.template_set.all():
             signatured = template.signaturedocx_set.all().values()
             for i, el in enumerate(signatured):
-                signatured[i]['name'] = Template.objects.get(id = el['template_id']).name
-                signatured[i]['user_name'] = User.objects.get(id = int(el['client_id'])).name
-            signatures.append(signatured)
-
+                if el['client_id']:
+                    signatured[i]['name'] = Template.objects.get(id = el['template_id']).name
+                    signatured[i]['user_name'] = User.objects.get(id = int(el['client_id'])).name
+                    signatures.append(signatured)
+        
         if len(signatures) == 0:
             for signatured in user.signaturedocx_set.all().values():
                 signatured['name'] = Template.objects.get(id = signatured['template_id']).name
                 signatured['user_name'] = Template.objects.get(id = signatured['template_id']).user
                 signatures.append([signatured])
 
-        print(signatures)
-
         return render(req, 'work/work.html', 
         {
             'page': page,
             'user': user,
             'templates': templates,
-            'signatures': signatures,
+            'signatures': [signatures[0]],
             'form': form,
             'messages': messages
         })
@@ -190,7 +189,9 @@ def editDoc(req, id):
 
 
 def signatureDoc(req, id):
-    if req.user.is_authenticated:
+    sign_doc = SignatureDocx.objects.get(id = id)
+
+    if req.user.is_authenticated and not(sign_doc.client_id):
         if not('sms' in req.POST):
             auth.send_sms(req.user.phone)
         if 'sms' in req.POST:

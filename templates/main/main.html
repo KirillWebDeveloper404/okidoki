@@ -21,7 +21,7 @@
           <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: white; font-weight: bold;">Цены</a></li>
           <li class="menu__item" style="margin-left: 50px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; background-color: white; border-radius: 25px; width: 150px; height: 50px; font-weight: bold; text-align: center; padding-top: 15px;">Контакты</a></li>
           {% if request.user.is_authenticated %}
-              <li class="nav-item menu__item" style="margin-left: 50px; margin-top: 10px;"><a class="nav-link nav-text" style="color: white; font-weight: bold;">Профиль</a></li>
+              <li class="nav-item menu__item" style="margin-left: 50px; margin-top: 10px;"><a class="nav-link nav-text" href="/work/settings" style="color: white; font-weight: bold;">Профиль</a></li>
           {% endif %}
           {% if request.user.is_authenticated == False %}
             <li class="nav-item menu__item" style="margin-left: 50px;  margin-top: 10px;"><a href="/accounts/login" class="nav-link nav-text" style="color: white; font-weight: bold;">Войти</a></li>
