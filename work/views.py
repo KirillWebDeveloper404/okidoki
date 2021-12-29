@@ -48,17 +48,40 @@ def work(req, page):
             for signatured in user.signaturedocx_set.all().values():
                 signatured['name'] = Template.objects.get(id = signatured['template_id']).name
                 signatured['user_name'] = Template.objects.get(id = signatured['template_id']).user
-                signatures.append([signatured])
+                signatures.append(signatured)
 
-        return render(req, 'work/work.html', 
-        {
-            'page': page,
-            'user': user,
-            'templates': templates,
-            'signatures': [signatures[0]],
-            'form': form,
-            'messages': messages
-        })
+            return render(req, 'work/work.html', 
+            {
+                'page': page,
+                'user': user,
+                'templates': templates,
+                'signatures': [signatures],
+                'form': form,
+                'messages': messages
+            })
+
+        if len(signatures) == 0:
+            return render(req, 'work/work.html', 
+            {
+                'page': page,
+                'user': user,
+                'templates': templates,
+                'signatures': [],
+                'form': form,
+                'messages': messages
+            })
+
+        else:
+            return render(req, 'work/work.html', 
+            {
+                'page': page,
+                'user': user,
+                'templates': templates,
+                'signatures': [signatures[0]],
+                'form': form,
+                'messages': messages
+            })
+
     except Exception as e:
         print(e)
         return redirect('main')
@@ -76,6 +99,7 @@ def editDoc(req, id):
 
     try:
         if req.method == 'POST':
+            print(req.POST)
             if 'signature' in req.POST:
                 signature = SignatureDocx()
                 document = Template.objects.get(id=id)
@@ -92,7 +116,33 @@ def editDoc(req, id):
                         have_all_directives = False
                         messages.append("Присутствуют не все директивы!")
                 if have_all_directives:
+                    file_path = str(document.file).replace('templates/', "content/templates/").replace(req.user.username + '\\', '').replace('/', '\\')
+                    file_path = os.path.join(settings.BASE_DIR, file_path)
+                    f = open(file_path, "rb")
+                    html = mammoth.convert_to_html(f)
+
+                    data = {}
+
+                    for directive in directives:
+                        data[str(directive['name'])] = req.POST[str(directive['name'])]
+
+                    for directive in system_directives:
+                        data[str(directive['name'])] = '{{' + str(directive['name']) + '}}'
+
+                    file = DocxTemplate(file_path)
+                    file.render(data)
+                    file_path_ = file_path.replace('\\templates\\', '\\signatured\\' + '\\').replace('\\', '/')
+
+                    try:
+                        os.makedirs(file_path_.replace(file_path_.split('/')[-1], ''))
+                    except:
+                        pass
+
+                    file.save(file_path_)
+                    file = open(file_path_, 'rb')
+
                     signature.create(document)
+                    signature.file = File(file, file_path_.split('/')[-1])
                     signature.save()
                     messages = []
                     messages.append("Договор выставлен на подпись. Скопируйте ссылку и передайте клиенту: " + str(req.build_absolute_uri().replace('editTemplate', 'signature')).replace('/' + str(id), '/' + str(signature.id)).split('?')[0])
@@ -196,12 +246,12 @@ def signatureDoc(req, id):
             auth.send_sms(req.user.phone)
         if 'sms' in req.POST:
             res = auth.authenticate(req.user.phone, req.POST['sms'])
-            print(req.user.phone, req.POST['sms'])
             if res != None:
-                document = Template.objects.get(id = SignatureDocx.objects.filter(id = id)[0].template_id)
+                document = SignatureDocx.objects.get(id = id)
                 print(document)
                 if document:
-                    file_path = str(document.file).replace('templates/', "content/templates/").replace('/', '\\')
+                    file_path = str(document.file).replace('content', 'content/content').replace('/', '\\')
+
                     file_path = os.path.join(settings.BASE_DIR, file_path)
                     f = open(file_path, "rb")
                     html = mammoth.convert_to_html(f)
@@ -225,14 +275,14 @@ def signatureDoc(req, id):
 
                 file.save(file_path_)
                 file = open(file_path_, 'rb')
-                signatured_doc = SignatureDocx.objects.get(id=id)
+                signatured_doc = document
                 signatured_doc.client = req.user
                 signatured_doc.file = File(file, file_path_.split('/')[-1])
                 signatured_doc.save()
 
-        document = Template.objects.get(id = SignatureDocx.objects.filter(id = id).values()[0]['template_id'])
+        document = SignatureDocx.objects.get(id = id)
         if document:
-            file_path = str(document.file).replace('templates/', "content/templates/").replace('/', '\\')
+            file_path = str(document.file).replace('content', 'content/content').replace('/', '\\')
             file_path = os.path.join(settings.BASE_DIR, file_path)
             f = open(file_path, "rb")
             html = mammoth.convert_to_html(f)

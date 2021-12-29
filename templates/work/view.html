@@ -20,12 +20,22 @@
     {% endif %}
 
     {% if user.organisation == None %}
-        <div class="nav-bar">
-            <ul>
-                <li class="navItem" id="signature"><a href="/work/signature">Подписаные</a></li>
-                <li class="navItem" id="settings"><a href="/work/settings">Настройки и профиль</a></li>
-            </ul>
-        </div>
+                <div class="nav-bar-phone fixed-bottom">
+                    <ul>
+                        <li class="navItem-phone" id="signature">
+                            <a href="/work/signature">
+                            <img class="nav-icon" src="{% static 'img/signatured.svg' %}"><br>
+                            <h3 class="nav-text-phone">Подписаные</h3>
+                            </a>
+                        </li>
+                        <li class="navItem-phone" style="margin-left: 25%;" id="settings">
+                            <a href="/work/settings">
+                            <img class="nav-icon" src="{% static 'img/profile.svg' %}" alt=""><br>
+                            <h3 class="nav-text-phone">Настройки и профиль</h3>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
     {% endif %}
 
     <div style="margin: 25px auto; width: 750px; border: 2px solid #0e1f4d; border-radius: 10px; padding: 25px;">

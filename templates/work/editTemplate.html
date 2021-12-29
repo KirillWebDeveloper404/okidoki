@@ -45,7 +45,7 @@
 
     <div class="row">
 
-        <div class="col">
+        <div class="col-lg-8">
         <form action="" method="post">
             {% csrf_token %}
             <div class="row" style="margin-left: 150px;">
@@ -56,14 +56,14 @@
 
                     <div class="row" style="margin-right: 50px;">
                         <div class="col">
-                            <button name="editor_btn" type="submit" id="submit" class="mt-5" style="color: #fff; background-color: #3333a9; border-radius: 25px; width: 150px; height: 50px; font-weight: bold;" onclick="document.getElementById('edit').value = myEditor.getData();">Сохранить</button>
+                            <button name="editor_btn" type="submit" id="submit" class="mt-5" style="color: #3333a9; background-color: #fff; border: #3333a9 solid 2px; border-radius: 15px; width: 150px; height: 50px; font-weight: bold; text-align: center;" onclick="document.getElementById('edit').value = myEditor.getData();">Сохранить</button>
                         </div>
                         <div class=" mt-5">
                             <form action="" method="post">
                                 {% csrf_token %}
-                                <button type="submit" name="signature" id="signature" style="color: #fff; background-color: #3333a9; border-radius: 25px; width: 150px; height: 50px; font-weight: bold;" onclick="document.getElementById('template').value = myEditor.getData();">Выставить на подпись</button>
+                                <button type="submit" name="signature" id="signature" style="color: #3333a9; background-color: #fff; border: #3333a9 solid 2px; border-radius: 15px; width: 150px; height: 50px; font-weight: bold; text-align: center;" onclick="document.getElementById('template').value = myEditor.getData();">Выставить на подпись</button>
                                 <input style="width: 0; height: 0; visibility: hidden;" name="template" id="template" type="text">
-                            </form>
+                            
                         </div>
                     </div>
                 
@@ -72,7 +72,7 @@
                 </div><hr>
             </div>
 
-                    <div class="edit-blok" style="width: 750px; margin: 30px 20%;">
+                    <div class="edit-blok" style="margin: 30px 20%;">
                         <div class="editor" id="editor" name='editor' contenteditable="true" data-gramm="false">
                             {% autoescape off %}
                             {{texts}}
@@ -81,29 +81,34 @@
                     </div>
                 </div>
 
-        <div class="col-4">
+        <div class="col-4" style="margin: 0 auto;">
 
             <div class="row">
                 <div class="col">
                     <h1 style="margin-top: 50px; font-size: x-large;">Мои директивы</h1>
                 </div>
                 <div class="col">
-                    <button type="button" class="nav-link nav-text mt-5" style="color: #fff; background-color: #3333a9; border-radius: 25px; width: 150px; height: 50px; font-weight: bold; text-align: center;" data-toggle="modal" data-target="#myModal">Добавить</button>
+                    <button type="button" class="nav-link nav-text mt-5" style="color: #3333a9; background-color: #fff; border: #3333a9 solid 2px; border-radius: 15px; width: 150px; height: 50px; font-weight: bold; text-align: center; padding-top: 11px;" data-toggle="modal" data-target="#myModal">Добавить</button>
                 </div>
             </div>
             <ul>
             {% for directive in directives %}
-
+                <li>
             <button class="btn" type="button" data-toggle="modal" data-target="#myModal1" 
             onclick="document.getElementById('name1').value = '{{directive.name}}'; document.getElementById('desc1').value = '{{ directive.desc }}'; document.getElementById('id_directive').value = '{{ directive.id }}';"
             >
-                <li>
                     <h6>{{ open }}{{ directive.name }}{{ close }}</h6>
                     <p>{{directive.desc}}</p>
-                </li>
+                
             </button>
-            </ul>
+                    <input class="form-control" type="text" name="{{directive.name}}" id="{{directive.name}}">
+                    <label for="{{directive.name}}">Введите значение перед тем как выставить на подпись</label>
+                </li>
             {% endfor %}
+            </ul>
+        </form>
+
+            <h1 style="margin-top: 50px; font-size: x-large;">Системные директивы</h1>
 
             {% for directive in system_directives %}
                 <li>
@@ -112,7 +117,6 @@
                 </li>
             </ul>
             {% endfor %}
-
             <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
                 <div class="modal-dialog modal-lg" role="document">
                   <div class="modal-content">
