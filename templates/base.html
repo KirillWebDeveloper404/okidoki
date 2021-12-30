@@ -12,26 +12,26 @@
 <body>
 
     {% block nav %}
-    <nav class="header header__container navbar navbar-expand-lg navbar-light ml-5 mr-5 mt-4 ">
-      <a class="navbar-brand" href="/"><img src="{% static 'img/logo-full.svg' %}" alt="OkiDoki logo" /></a>
-      <div class="menu-burger__header light">
-        <span></span>
-      </div>
-  
-      <div class="mr-auto header__nav" id="navbarSupportedContent" style="background-color: #fff;">
-        <ul class="ml-auto menu header__menu">
-            <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Возможности</a></li>
-            <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Цены</a></li>
-            <li class="menu__item" style="margin-left: 50px;"><a href="#" class="nav-link nav-text" style="color: #fff; background-color: #3333a9; border-radius: 25px; width: 150px; height: 50px; font-weight: bold; text-align: center; padding-top: 15px;">Контакты</a></li>
-            {% if request.user.is_authenticated %}
-                <li class="nav-item menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="/work/settings" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Профиль</a></li>
-            {% endif %}
-            {% if request.user.is_authenticated == False %}
-              <li class="nav-item menu__item" style="margin-left: 50px;  margin-top: 10px;"><a href="/accounts/login" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Войти</a></li>
-            {% endif %}
-        </ul>
-      </div>
-    </nav>
+      <nav class="header header__container navbar navbar-expand-lg navbar-light ml-5 mr-5 mt-4 ">
+        <a class="navbar-brand" href="/"><img src="{% static 'img/logo-full.svg' %}" alt="OkiDoki logo" /></a>
+        <div class="menu-burger__header light">
+          <span></span>
+        </div>
+    
+        <div class="mr-auto header__nav" id="navbarSupportedContent" style="background-color: #fff;">
+          <ul class="ml-auto menu header__menu">
+              <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Возможности</a></li>
+              <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Цены</a></li>
+              <li class="menu__item" style="margin-left: 50px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; background-color: #e9ecf7; border-radius: 25px; width: 150px; height: 50px; font-weight: bold; text-align: center; padding-top: 15px;">Контакты</a></li>
+              {% if request.user.is_authenticated %}
+                  <li class="nav-item menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="/work/settings" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Профиль</a></li>
+              {% endif %}
+              {% if request.user.is_authenticated == False %}
+                <li class="nav-item menu__item" style="margin-left: 50px;  margin-top: 10px;"><a href="/accounts/login" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Войти</a></li>
+              {% endif %}
+          </ul>
+        </div>
+      </nav>
     {% endblock nav %}
 
     {% for message in messages  %}
@@ -65,6 +65,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="{% static 'main.js' %}"></script>
+    <script>
+      $(document).ready(function() {
+      $('.menu-burger__header').click(function() {
+          $('.menu-burger__header').toggleClass('open-menu');
+          $('.header__menu').toggleClass('header__menu_active');
+      });
+    }); 
+    </script>
 </body>
 </html>

@@ -162,3 +162,13 @@ body {
         border-color: #fff;
     }
 }
+
+.button {
+    color: #fff; 
+    background-color: #3333a9; 
+    border-radius: 25px; width: 150px; 
+    height: 50px; 
+    font-weight: bold; 
+    text-align: center; 
+    padding-top: 15px;
+}

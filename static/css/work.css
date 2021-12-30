@@ -131,6 +131,7 @@
 .list-item {
     width: 750px; 
     margin: 5px auto; 
+    color: #0e1f4d;
     border-radius: 15px; 
     -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); 
     -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); 

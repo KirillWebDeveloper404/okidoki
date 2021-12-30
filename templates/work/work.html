@@ -46,11 +46,11 @@
     {% if page == "newDoc" %}
 
     <div class="row">
-        <div class="col-9 mt-5">
+        <div class="mt-5" style="margin: auto;">
 
             {% for template in templates %}
             <a href="/work/editTemplate/{{template.id}}">
-                <div class="list-item" style="width: 750px; margin: 5px 25%; border-radius: 15px; -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); text-decoration: none; color: #000;">
+                <div style="width: 750px; margin: 5px auto; border-radius: 15px; -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); text-decoration: none; color: #000;">
                     <div class="card-body">
                     {{template.name}}
                     </div>
@@ -75,7 +75,7 @@
               <a href="/work/viewSignature/{{el.id}}">
                 <div class="list-item">
                     <div class="card-body">
-                        <h6 style="text-decoration: none; color: #000;;">{{el.name}}</h6>
+                        <h6 style="text-decoration: none; color: #000;;">№{{el.id}} {{el.name}}</h6>
                         <p style="text-decoration: none; color: #000;">{{el.user_name}}</p>
                         </div>
                     </div>
