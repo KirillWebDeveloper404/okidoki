@@ -11,6 +11,7 @@ import os
 import datetime
 from docxtpl import DocxTemplate
 from accounts.auth_user import UserAuth as auth
+import traceback
 
 
 def work(req, page):
@@ -99,7 +100,6 @@ def editDoc(req, id):
 
     try:
         if req.method == 'POST':
-            print(req.POST)
             if 'signature' in req.POST:
                 signature = SignatureDocx()
                 document = Template.objects.get(id=id)
@@ -116,8 +116,7 @@ def editDoc(req, id):
                         have_all_directives = False
                         messages.append("Присутствуют не все директивы!")
                 if have_all_directives:
-                    file_path = str(document.file).replace('templates/', "content/templates/").replace(req.user.username + '\\', '').replace('/', '\\')
-                    file_path = os.path.join(settings.BASE_DIR, file_path)
+                    file_path = str(document.file.path)
                     f = open(file_path, "rb")
                     html = mammoth.convert_to_html(f)
 
@@ -131,7 +130,7 @@ def editDoc(req, id):
 
                     file = DocxTemplate(file_path)
                     file.render(data)
-                    file_path_ = file_path.replace('\\templates\\', '\\signatured\\' + '\\').replace('\\', '/')
+                    file_path_ = file_path
 
                     try:
                         os.makedirs(file_path_.replace(file_path_.split('/')[-1], ''))
@@ -140,9 +139,10 @@ def editDoc(req, id):
 
                     file.save(file_path_)
                     file = open(file_path_, 'rb')
+                    print(file_path_.split('\\')[-1])
 
                     signature.create(document)
-                    signature.file = File(file, file_path_.split('/')[-1])
+                    signature.file = File(file, file_path_.split('\\')[-1])
                     signature.save()
                     messages = []
                     messages.append("Договор выставлен на подпись. Скопируйте ссылку и передайте клиенту: " + str(req.build_absolute_uri().replace('editTemplate', 'signature')).replace('/' + str(id), '/' + str(signature.id)).split('?')[0])
@@ -175,7 +175,7 @@ def editDoc(req, id):
                 if req.POST['editor']:
                     file_doc = Template.objects.get(id = id)
                     if file_doc:
-                        file_path = str(file_doc.file).replace('templates/', "content/templates/").replace('/', '\\')
+                        file_path = str(file_doc.file.path)
                         file_path = os.path.join(settings.BASE_DIR, file_path)
                     html = req.POST['editor']
 
@@ -203,7 +203,7 @@ def editDoc(req, id):
 
         document = Template.objects.get(id = id)
         if document:
-            file_path = str(document.file).replace('templates/', "content/templates/").replace('/', '\\')
+            file_path = str(document.file.path)
             file_path = os.path.join(settings.BASE_DIR, file_path)
             f = open(file_path, "rb")
             html = mammoth.convert_to_html(f)
@@ -231,7 +231,7 @@ def editDoc(req, id):
             })
 
     except Exception as e:
-        print(e)
+        print(traceback.format_exc(1))
         return render(req, 'work/editTemplate.html', 
             {
                 'messages': ["Такого шаблона не существует. Проверьте правильность url или загрузите шаблон заново!"]
@@ -250,7 +250,7 @@ def signatureDoc(req, id):
                 document = SignatureDocx.objects.get(id = id)
                 print(document)
                 if document:
-                    file_path = str(document.file).replace('content', 'content/content').replace('/', '\\')
+                    file_path = str(document.file.path)
 
                     file_path = os.path.join(settings.BASE_DIR, file_path)
                     f = open(file_path, "rb")
@@ -266,10 +266,10 @@ def signatureDoc(req, id):
 
                 file = DocxTemplate(file_path)
                 file.render(data)
-                file_path_ = file_path.replace('\\templates\\', '\\signatured\\' + req.user.username + '\\').replace('\\', '/')
+                file_path_ = file_path
 
                 try:
-                    os.makedirs(file_path_.replace(file_path_.split('/')[-1], ''))
+                    os.makedirs(file_path_.replace(file_path_.split('\\')[-1], ''))
                 except:
                     pass
 
@@ -277,12 +277,18 @@ def signatureDoc(req, id):
                 file = open(file_path_, 'rb')
                 signatured_doc = document
                 signatured_doc.client = req.user
-                signatured_doc.file = File(file, file_path_.split('/')[-1])
+                signatured_doc.file = File(file, file_path_.split('\\')[-1])
                 signatured_doc.save()
+                html = mammoth.convert_to_html(file)
+
+                return render(req, 'work/view.html', {
+                    'messages': ['Договор подписан!'],
+                    'text': html.value
+                })
 
         document = SignatureDocx.objects.get(id = id)
         if document:
-            file_path = str(document.file).replace('content', 'content/content').replace('/', '\\')
+            file_path = str(document.file.path)
             file_path = os.path.join(settings.BASE_DIR, file_path)
             f = open(file_path, "rb")
             html = mammoth.convert_to_html(f)
@@ -306,7 +312,7 @@ def view(req, id):
         is_owner = tpl.user == req.user
 
         if document:
-            file_path = str(document.file).replace('content/', "content/content/").replace('/', '\\')
+            file_path = str(document.file.path)
             file_path = os.path.join(settings.BASE_DIR, file_path)
             f = open(file_path, "rb")
             html = mammoth.convert_to_html(f)

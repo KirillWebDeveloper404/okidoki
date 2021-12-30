@@ -29,10 +29,6 @@
     margin: 0 auto;
 }
 
-.nav-text-phone {
-    margin-top: 0;
-}
-
 .nav-icon {
     transform: scale(110%);
 }
@@ -56,7 +52,7 @@
     }
     
     .nav-text-phone {
-        margin-top: 5%;
+        margin-top: 2%;
     }
     
     .nav-icon {

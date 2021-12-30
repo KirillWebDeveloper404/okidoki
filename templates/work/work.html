@@ -73,7 +73,7 @@
             {% for el in signature %}
             {% if el.name %}
               <a href="/work/viewSignature/{{el.id}}">
-                <div class="list-item">
+                <div class="list-item" style="width: 750px; margin: 5px auto; border-radius: 15px; -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); text-decoration: none; color: #000;">
                     <div class="card-body">
                         <h6 style="text-decoration: none; color: #000;;">№{{el.id}} {{el.name}}</h6>
                         <p style="text-decoration: none; color: #000;">{{el.user_name}}</p>
@@ -308,13 +308,13 @@
                         <li class="navItem-phone" id="signature">
                             <a href="/work/signature">
                             <img class="nav-icon" src="{% static 'img/signatured.svg' %}"><br>
-                            <h3 class="nav-text-phone">Подписаные</h3>
+                            <h3 class="nav-text-phone" style="margin-top: auto; font-size: medium;">Подписаные</h3>
                             </a>
                         </li>
                         <li class="navItem-phone" style="margin-left: 25%;" id="settings">
                             <a href="/work/settings">
                             <img class="nav-icon" src="{% static 'img/profile.svg' %}" alt=""><br>
-                            <h3 class="nav-text-phone">Настройки и профиль</h3>
+                            <h3 class="nav-text-phone" style="margin-top: auto; font-size: medium;">Настройки и профиль</h3>
                             </a>
                         </li>
                     </ul>

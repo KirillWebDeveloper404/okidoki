@@ -37,7 +37,7 @@
     {% for message in messages  %}
       <form action="">
           {% csrf_token %}
-          <div class="toast_ fixed" id="toast" role="alert" aria-live="assertive" style="margin: 150px 150px;">
+          <div class="toast_" id="toast" role="alert" aria-live="assertive" style="position: fixed; right: 5%; bottom: 20%; z-index: 1;">
               <div class="toast-header">
               <img src="{% static 'img/logo-full.svg' %}" class="rounded mr-2">
               <button type="submit" name='close' class="ml-auto mb-1 close" data-dismiss="toast" aria-label="Close ">
