@@ -50,7 +50,7 @@ class SignatureDocx(models.Model):
 
     template = models.ForeignKey(Template, on_delete=models.CASCADE)
     client = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null= True)
-    file = models.FileField(verbose_name="Подписанный докумет", upload_to='/'.join(['content']), blank=True, null=True)
+    file = models.FileField(verbose_name="Подписанный докумет", upload_to='signatured/', blank=True, null=True)
 
     def create(self, data):
         self.template = data

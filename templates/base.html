@@ -13,12 +13,12 @@
 
     {% block nav %}
       <nav class="header header__container navbar navbar-expand-lg navbar-light ml-5 mr-5 mt-4 ">
-        <a class="navbar-brand" href="/"><img src="{% static 'img/logo-full.svg' %}" alt="OkiDoki logo" /></a>
-        <div class="menu-burger__header light">
+        <a class="navbar-brand fixed mt-3 ml-5" href="/"><img src="{% static 'img/logo-full.svg' %}" alt="OkiDoki logo" /></a>
+        <div class="menu-burger__header light ml-auto">
           <span></span>
         </div>
     
-        <div class="mr-auto header__nav" id="navbarSupportedContent" style="background-color: #fff;">
+        <div class="mr-auto header__nav mt-3" id="navbarSupportedContent" style="background-color: #fff;">
           <ul class="ml-auto menu header__menu">
               <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Возможности</a></li>
               <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Цены</a></li>
@@ -60,6 +60,29 @@
     {% block main %}
         
     {% endblock main %}
+
+    {% block footer %}
+    <footer style="display: flex; border-top: 1px solid #eee; font-size: 10pt; padding: 15px 30px; margin: 200px auto; width: 100%;">
+      <div class="row" style="margin: 0 auto;">
+
+        <div class="col">
+          <img src="{% static 'img/logo-full.svg' %}" class="footer-logo" alt="OkiDoki">
+        </div>
+
+        <div class="col-6">
+            <span>Мы в социальных сетях:</span>
+            <a href="#"><img viewBox="0 0 24 24" class="__telegram" style="margin-left: 30px;" src="{% static 'img/vk.svg' %}"></img></a>
+            <a href="#"><img viewBox="0 0 24 24" class="__telegram" style="margin-left: 0;" src="{% static 'img/telegram.svg' %}"></img></a>
+            <a href="#"><img viewBox="0 0 24 24" class="__telegram" style="margin-left: 0;" src="{% static 'img/facebook.svg' %}"></img></a>
+        </div>
+
+        <div class="col" style="margin-left: 150px;">
+          <div>Copyright © 2021 OkiDoki. Все права защищены</div>
+        </div>
+      </div>
+    </footer>    
+    <img src="{% static 'img/bg-vector-2.svg' %}" alt="" class="bg-vector-1 fixed" />
+    {% endblock footer %}
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

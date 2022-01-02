@@ -6,23 +6,26 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link href="{% static 'accounts.css' %}" rel="stylesheet" type="text/css" />
 
-<div style="margin-top: 150px;">
+<div style="margin-top: 150px; height: 100vh;">
     <h1 class="sing-h1">Регистрация</h1>
 
-    <ol class="c-stepper ">
-        <li class="c-stepper__item">
-            <h3 class="c-stepper__title digit active">1</h3>
-            <p class="c-stepper__desc mt-3">Личная информация</p>
-        </li>
-        <li class="c-stepper__item">
-            <h3 id="2" class="c-stepper__title digit active">2</h3>
-            <p class="c-stepper__desc mt-3">Паспортные данные</p>
-        </li>
-        <li class="c-stepper__item">
-            <h3 id="3" class="c-stepper__title digit">3</h3>
-            <p class="c-stepper__desc mt-3">Информация об организации</p>
-        </li>
-    </ol>
+    <div style="width: 600px; margin: 0 auto;">
+        <ol class="c-stepper ">
+            <li class="c-stepper__item">
+                <h3 class="c-stepper__title digit active">1</h3>
+                <p class="c-stepper__desc mt-3">Личная информация</p>
+            </li>
+            <li class="c-stepper__item">
+                <h3 id="2" class="c-stepper__title digit active">2</h3>
+                <p class="c-stepper__desc mt-3">Паспортные данные</p>
+            </li>
+            <li class="c-stepper__item mt-3">
+                <h3 id="3" class="c-stepper__title digit">3</h3>
+                <p class="c-stepper__desc mt-3">Информация об организации</p>
+            </li>
+        </ol>
+    </div>
+    
 
     <div class="row align-items-center">
         <div class="col-offset-8 mx-auto mt-3">
@@ -36,7 +39,7 @@
                     {{form.phone}}<br>
                     <label for="input">E-mail</label>
                     {{form.email}}<br>
-                    <label for="input"><a href="/accounts/registerClient/">Зарегистрироваться как клиент</a></label><br>
+                    <a href="/accounts/registerClient/" class="nav-link nav-text" style="color: #3333a9; background-color: #fff; border: #3333a9 solid 2px; border-radius: 15px; width: auto; height: auto; font-weight: bold; text-align: center; padding-top: 11px;">Зарегистрироваться как клиент</a><br>
                     <button class="next" type="sumbit" name="2">Далее</button>
                     <script>document.getElementById("2").classList.remove('active');
                     document.getElementById("3").classList.remove('active');</script>

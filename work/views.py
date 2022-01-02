@@ -100,8 +100,8 @@ def editDoc(req, id):
 
     try:
         if req.method == 'POST':
+            print(req.POST)
             if 'signature' in req.POST:
-                signature = SignatureDocx()
                 document = Template.objects.get(id=id)
                 html = req.POST['template']
                 have_all_directives = True
@@ -130,21 +130,20 @@ def editDoc(req, id):
 
                     file = DocxTemplate(file_path)
                     file.render(data)
-                    file_path_ = file_path
+                    file_path_ = file_path.replace('templates', 'signatures')
 
                     try:
-                        os.makedirs(file_path_.replace(file_path_.split('/')[-1], ''))
-                    except:
-                        pass
+                        os.makedirs(file_path_.replace(file_path_.split('\\')[-1], ''))
+                    except Exception as e:
+                        print(e)
 
                     file.save(file_path_)
                     file = open(file_path_, 'rb')
-                    print(file_path_.split('\\')[-1])
 
+                    signature = SignatureDocx()
                     signature.create(document)
                     signature.file = File(file, file_path_.split('\\')[-1])
                     signature.save()
-                    messages = []
                     messages.append("Договор выставлен на подпись. Скопируйте ссылку и передайте клиенту: " + str(req.build_absolute_uri().replace('editTemplate', 'signature')).replace('/' + str(id), '/' + str(signature.id)).split('?')[0])
                     
 
