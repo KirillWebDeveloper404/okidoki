@@ -7,6 +7,7 @@ class User(AbstractUser):
     name = models.CharField(verbose_name="Name", max_length=100, blank=True, null=True)
     phone = models.CharField(verbose_name="Phone", max_length=100, blank=True, null=True)
     email = models.CharField(verbose_name="Email", max_length=100, blank=True, null=True)
+    verEmail = models.BooleanField(verbose_name="Верификация email")
     date_burn = models.DateField(verbose_name="birthday", blank=True, null=True)
     pasport = models.CharField(verbose_name="pasport's seria and number", max_length=20, blank=True, null=True)
     pasport_otdel = models.CharField(verbose_name="who gives pasport", max_length=250, blank=True, null=True)

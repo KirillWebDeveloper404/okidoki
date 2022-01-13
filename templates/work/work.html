@@ -2,6 +2,44 @@
 {% load static %}
 
 
+{% block nav %}
+    {% if user.organisation != None %}
+        <nav class="header header__container navbar navbar-expand-lg navbar-light ml-5 mr-5 mt-4 ">
+            <a class="navbar-brand fixed mt-3 ml-5" style="width: 100px;" href="/"><img src="{% static 'img/logo-full.svg' %}" alt="OkiDoki logo" /></a>
+            
+            <div class="menu-burger__header light ml-auto">
+            <span></span>
+            </div>
+        
+            <div class="mr-auto header__nav mt-3" id="navbarSupportedContent" style="background-color: #fff;">
+            <ul class="ml-auto menu header__menu">
+                <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Возможности</a></li>
+                <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Цены</a></li>
+                <li class="menu__item" style="margin-left: 50px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; background-color: #e9ecf7; border-radius: 25px; width: 150px; height: 50px; font-weight: bold; text-align: center; padding-top: 15px;">Контакты</a></li>
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="/work/settings" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Профиль</a></li>
+                {% endif %}
+                {% if request.user.is_authenticated == False %}
+                    <li class="nav-item menu__item" style="margin-left: 50px;  margin-top: 10px;"><a href="/accounts/login" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Войти</a></li>
+                {% endif %}
+            </ul>
+            </div>
+        </nav>
+    {% else %}
+        {% if page == 'settings' %}
+            <nav class="navbar" style="height: 100px; background-color: #fff; box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);">
+                <span class="navbar-brand mb-0 h1" style="margin: 0 auto; font-size: x-large; transform: scale(1.5);">Профиль</span>
+            </nav>
+        {% endif %}
+        {% if page == 'signature' %}
+            <nav class="navbar" style="height: 100px; background-color: #fff; box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);">
+                <span class="navbar-brand mb-0 h1" style="margin: 0 auto; font-size: x-large; transform: scale(1.5);">Подписаные</span>
+            </nav>
+        {% endif %}
+    {% endif %}
+{% endblock nav %}
+
+
 {% block work %}
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 <link rel="stylesheet" href="{% static 'work.css' %}">
@@ -24,7 +62,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default mt-3" data-dismiss="modal">Назад</button>
-                        <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
+                        <button type="submit" name="addTemplate" class="btn btn-primary mt-3">Сохранить</button>
                     </div>
                 </form>
             </div>
@@ -48,15 +86,21 @@
     <div class="row">
         <div class="mt-5" style="margin: auto;">
 
-            {% for template in templates %}
-            <a href="/work/editTemplate/{{template.id}}">
+            {% if templates %}
+
+              {% for template in templates %}
                 <div style="width: 750px; margin: 5px auto; border-radius: 15px; -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); text-decoration: none; color: #000;">
                     <div class="card-body">
-                    {{template.name}}
+                        <a href="/work/newDoc/{{template.id}}" style="color:#000;">
+                            {{template.name}}
+                        </a>
                     </div>
                 </div>
-            </a>
-            {% endfor %}
+              {% endfor %}
+            {% else %}
+            <h1 style="text-align: center; margin: 15vh auto; width: 345px;">Вы пока ничего не добавили : (</h1>
+            <p style="text-align: center; margin: -12vh auto; width: 345px;">Добавьте шаблон и начните работу в нашем замечательном сервисе!</p>
+            {% endif %}
 
         </div>
     </div>
@@ -68,21 +112,92 @@
 
     {% if page == "signature" %}
 
-    <div style="margin: 25px auto;">
-        {% for signature in signatures %}
-            {% for el in signature %}
-            {% if el.name %}
-              <a href="/work/viewSignature/{{el.id}}">
-                <div class="list-item" style="width: 750px; margin: 5px auto; border-radius: 15px; -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); text-decoration: none; color: #000;">
-                    <div class="card-body">
-                        <h6 style="text-decoration: none; color: #000;;">№{{el.id}} {{el.name}}</h6>
-                        <p style="text-decoration: none; color: #000;">{{el.user_name}}</p>
+    <div style="margin: 35px auto;">
+        {% if user.organisation != None %}
+        <input id="searchForm" class="form-control" style="width: 260px; height: 50px; border-radius: 10px; border: 1px solid rgba(142,148,177,.5); margin: 10px 25%;" type="text" placeholder="Поиск..."
+        onkeyup="
+        var filter = document.getElementById('searchForm').value.toLowerCase();
+        var nodes = document.getElementsByClassName('signatureItem');
+
+        for(i = 0; i < nodes.length; i++){
+            if (nodes[i].id.toLowerCase().includes(filter)){
+                nodes[i].style.display = 'block';
+                console.log(i, 'block');
+            } else {
+            nodes[i].style.display = 'none';
+            console.log(nodes[i].id, filter, 'none');
+            }
+        }
+        "
+        >
+        {% else %}
+        <input id="searchForm" class="form-control" style="width: 260px; height: 50px; border-radius: 10px; border: 1px solid rgba(142,148,177,.5); margin: 10px 25%; transform: scale(2.5); margin-bottom: 70px;" type="text" placeholder="Поиск..."
+        onkeyup="
+        var filter = document.getElementById('searchForm').value.toLowerCase();
+        var nodes = document.getElementsByClassName('signatureItem');
+
+        for(i = 0; i < nodes.length; i++){
+            if (nodes[i].id.toLowerCase().includes(filter)){
+                nodes[i].style.display = 'block';
+                console.log(i, 'block');
+            } else {
+            nodes[i].style.display = 'none';
+            console.log(nodes[i].id, filter, 'none');
+            }
+        }
+        "
+        >
+        {% endif %}
+
+        {% if signatures.0 %}
+            {% for signature in signatures %}
+                {% for el in signature %}
+                {% if el.name %}
+                <a href="/work/viewSignature/{{el.id}}">
+                    {% if user.organisation != None %}
+                        <div class="list-item card-body signatureItem" id="{{el.name}}{{el.user_name}}" style="width: 750px; height: 85px; margin: 5px auto; border-radius: 15px; -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); text-decoration: none; color: #000;">
+                            
+                            <div class="row">
+                                <div class="col-10">
+                                    <a href="/work/viewSignature/{{el.id}}" style="color:#000;">
+                                        <h6 style="text-decoration: none; color: #000;">№{{el.id}} {{el.name}}</h6>
+                                        <p style="text-decoration: none; color: #000;">{{el.user_name}}</p>
+                                    </a>
+                                </div>
+
+                                <div class="col">
+                                    <a href="/work/signature/download/{{el.id}}"><img src="{% static 'img/download.svg' %}"></a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    {% else %}
+
+                        <div class="list-item card-body signatureItem" id="{{el.name}}{{el.user_name}}" style="width: 900px; height: 150px; margin: 5px auto; border-radius: 15px; -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60,80, 0.2); -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); text-decoration: none; color: #000;">
+                            <div class="row">
+                                <div class="col-10">
+                                    <a href="/work/viewSignature/{{el.id}}" style="color:#000;">
+                                        <h6 style="text-decoration: none; color: #000; font-size: xx-large;">№{{el.id}} {{el.name}}</h6>
+                                         <p style="text-decoration: none; color: #000; font-size: xx-large;">{{el.user_name}}</p>
+                                    </a>
+                                </div>
+    
+                                <div class="col">
+                                    <a href="/work/signature/download/{{el.id}}"><img src="{% static 'img/download.svg' %}" style="transform: scale(2); margin-top: 30px;"></a>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endif %}
+                    
                 </a>
-            {% endif %}
+                {% endif %}
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
+
+        {% else %}
+        <h1 style="text-align: center; margin: 15vh auto; width: 345px;">Вы пока ничего не подписали : (</h1>
+        {% endif %}
+
     </div>
       
     <script>
@@ -92,25 +207,38 @@
 
     {% if page == "templates" %}
 
+    {% if templates %}
     <div class="row">
         <div class="col-9 mt-5">
 
-            {% for template in templates %}
-            <a href="/work/editTemplate/{{template.id}}">
-                <div class="list-item" style="width: 750px; margin: 5px 25%; border-radius: 15px; -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); text-decoration: none; color: #000;">
+              {% for template in templates %}
+                <div style="width: 750px; margin: 5px auto; border-radius: 15px; -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); text-decoration: none; color: #000;">
                     <div class="card-body">
-                    {{template.name}}
+                        <div class="row">
+                            <div class="col-10">
+                                <a href="/work/editTemplate/{{template.id}}" style="color:#000;">
+                                    {{template.name}}
+                                </a>
+                            </div>
+
+                            <div class="col">
+                                <a href="/work/template/download/{{template.id}}"><img src="{% static 'img/download.svg' %}"></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </a>
-            {% endfor %}
-
-        </div>
+              {% endfor %}
+    </div>
         <div class="col-3">
             <button type="button" class="nav-link nav-text mt-5" style="color: #3333a9; background-color: #fff; border: #3333a9 solid 2px; border-radius: 15px; width: 150px; height: 50px; font-weight: bold; text-align: center; padding-top: 11px;" data-toggle="modal" data-target="#myModal">Добавить</button>
         </div>
     </div>
-      
+    {% else %}
+    <h1 style="text-align: center; margin: 15vh auto; width: 345px;">Вы пока ничего не добавили : (</h1>
+    <p style="text-align: center; margin: -12vh auto; width: 345px;">Добавьте шаблон и начните работу в нашем замечательном сервисе!</p>
+    <button type="button" class="nav-link nav-text" style="color: #3333a9; background-color: #fff; border: #3333a9 solid 2px; border-radius: 15px; width: 150px; height: 50px; font-weight: bold; text-align: center; padding-top: 11px; margin: 100px auto;" data-toggle="modal" data-target="#myModal">Добавить</button>
+    {% endif %}
+
     <script>
         document.getElementById("templates").classList.add("navItemActive")
     </script>
@@ -120,16 +248,12 @@
 
     {% if user.organisation != None %}
         <h1 class="organisation-h1">{{user.organisation}}</h1>
-    {% endif %}
-    {% if user.organisation == None %}
-        <h1 class="organisation-h1">{{user.name}}</h1>
-    {% endif %}
-
-    <div class="card profile-info" style="width: 60%;">
-        <div class="card-body">
-          
-            <div class="row">
-                <div class="col">
+    
+        <div class="card profile-info" style="width: 60%;">
+            <div class="card-body">
+            
+                <div class="row">
+                    <div class="col">
 
                     <h1 class="title-blok">Основная информация</h1>
                     <table class="table">
@@ -147,6 +271,15 @@
                             </tr><tr>
                                 <td>E-mail</td>
                                 <td>{{user.email}}</td>
+                                {% if user.verEmail %}
+                                {% else %}
+                                <td>
+                                    <form action="" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" name="verEmail" style="color: #3333a9; background-color: #fff; border: #3333a9 solid 2px; border-radius: 15px; width: 150px; height: 60px; font-weight: bold; text-align: center; margin: 0 auto;">Подтвердить email</button>
+                                    </form>
+                                </td>
+                                {% endif %}
                             </tr><tr>
                                 <td>Дата регистрации</td>
                                 <td>{{user.date_joined|date:"d.m.Y"}}</td>
@@ -177,7 +310,6 @@
                         </tbody>
                     </table>
 
-                    {% if user.organisation != None %}
                     <h1 class="title-blok">Данные юр. лица</h1>
                     <table class="table">
                         <tbody>
@@ -217,8 +349,6 @@
                         </tbody>
                     </table>
 
-                {% endif %}
-
                 </div>
                 <div class="col ml-3">
                     <h1 class="title-blok">Поддержка</h1>
@@ -244,10 +374,60 @@
             </div>
 
         </div>
+        {% endif %}
 
-        {% if req.user.organisation != None %}
+
+        {% if user.organisation == None %}
+        
+    
+        <div style="width: 900px; height: 200px; margin: 5px auto; border-radius: 15px; -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); text-decoration: none; color: #000;">
+            <div class="card-body">
+                <h3 style="margin-top: 60px;">{{user.name}}</h1>
+                <h3>Паспорт: {{user.pasport}}</h3>
+            </div>
+        </div>
+
+        <div style="width: 900px; height: 100px; margin: 30px auto; border-radius: 15px; -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); text-decoration: none; color: #000;">
+            <div class="card-body">
+                <h3>Почта: {{user.email}}</h3>
+            </div>
+        </div>
+
+        <div style="width: 900px; height: 100px; margin: 30px auto; border-radius: 15px; -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); text-decoration: none; color: #000;">
+            <div class="card-body">
+                <h3>Телефон: {{user.phone}}</h3>
+            </div>
+        </div>
+
+        <a href="https://t.me/okidokihelp">
+            <div style="width: 900px; height: 100px; margin: 30px auto; border-radius: 15px; -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); text-decoration: none; color: #000;">
+                <div class="card-body">
+                    <h2> <img src="{% static 'img/link.svg' %}" style="transform: scale(2); margin-left: 30px; margin-right: 20px;"> Поддержка в телеграме</h2>
+                </div>
+            </div>
+        </a>
+
+        <a>
+            <div style="width: 900px; height: 100px; margin: 30px auto; border-radius: 15px; -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); text-decoration: none; color: #000;">
+                <div class="card-body">
+                    <h2> <img src="{% static 'img/link.svg' %}" style="transform: scale(2); margin-left: 30px; margin-right: 20px;"> Поддержка в ватсапе</h2>
+                </div>
+            </div>
+        </a>
+
+        <a href="/accounts/logout/">
+            <div style="width: 900px; height: 100px; margin: 30px auto; border-radius: 15px; -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); text-decoration: none; color: #000;">
+                <div class="card-body">
+                    <h2> <img src="{% static 'img/link.svg' %}" style="transform: scale(2); margin-left: 30px; margin-right: 20px;"> Выйти</h2>
+                </div>
+            </div>
+        </a>
+
+        {% endif %}
+
+        {% if user.organisation != None %}
           
-        <div class="row" style="margin: 0 auto 20px;">
+            <div class="row" style="margin: 0 auto 20px;">
 
             <div class="card col" style="width: 20rem; border: #2417a6 solid 2px; border-radius: 30px;">
                         <div class="card-body" style="margin: 0 auto; color: #3333a9;">
@@ -295,7 +475,7 @@
 
 
             </div>
-            {% endif %}
+        {% endif %}
 
     <script>
         document.getElementById("settings").classList.add("navItemActive")
@@ -303,7 +483,7 @@
     {% endif %}
 
                 {% if user.organisation == None %}
-                <div class="nav-bar-phone fixed-bottom">
+                <div class="nav-bar-phone fixed-bottom" style="transform: scale(2);">
                     <ul>
                         <li class="navItem-phone" id="signature">
                             <a href="/work/signature">
@@ -311,7 +491,7 @@
                             <h3 class="nav-text-phone" style="margin-top: auto; font-size: medium;">Подписаные</h3>
                             </a>
                         </li>
-                        <li class="navItem-phone" style="margin-left: 25%;" id="settings">
+                        <li class="navItem-phone" style="margin-left: 10%;" id="settings">
                             <a href="/work/settings">
                             <img class="nav-icon" src="{% static 'img/profile.svg' %}" alt=""><br>
                             <h3 class="nav-text-phone" style="margin-top: auto; font-size: medium;">Настройки и профиль</h3>
@@ -333,3 +513,9 @@
   <br><br><br>
   
 {% endblock work %}
+
+{% if req.user.organisation == None %}
+    {% block footer %}
+      
+    {% endblock footer %}
+{% endif %}

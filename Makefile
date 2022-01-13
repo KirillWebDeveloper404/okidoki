@@ -24,3 +24,11 @@ start:
 restart:
 	make stop
 	make start
+
+
+reqs:
+	rm requirements.txt
+	pipreqs --encoding=utf8 .
+
+ssh:
+	ssh root@109.68.213.180

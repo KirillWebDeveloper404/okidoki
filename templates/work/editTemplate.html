@@ -1,6 +1,19 @@
 {% extends "../base.html" %}
 {% load static %}
 
+{% block nav %}
+    {% if user.organisation == None %}
+        <nav class="navbar navbar-light bg-light" style="height: 150px;">
+            <a class="navbar-brand ml-5" href="/work/templates" style="transform: scale(2); z-index: 2;"><img src="{% static 'img/back.svg' %}" alt=""></a>
+            <span class="navbar-brand mb-0 h1" style="margin: 0 auto; font-size: xx-large; transform: scale(2);">Шаблон</span>
+        </nav>
+    {% else %}
+        <nav class="navbar navbar-light bg-light" style="height: 80px;">
+            <a href="/work/templates"  class="navbar-brand ml-5"style="transform: scale(1.5); z-index: 2;"><img src="{% static 'img/back.svg' %}" alt=""></a>
+            <span class="navbar-brand mb-0 h1" style="margin: 0 auto; font-size: x-large; transform: scale(1.5);">Шаблон</span>
+        </nav>
+    {% endif %}
+{% endblock nav %}
 
 {% block work %}
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
@@ -15,7 +28,7 @@
                   <div class="madal-title"><h1 class="title-blok mt-3 ml-3">Добавление директивы</h1></div>
               </div>
               
-                <form action="" method="post">
+                <form action="" method="post" id="directive">
                     <div class="modal-body">
                         {% csrf_token %}
                         <label for="input">Введите название директивы. Разрешены только латинские буквы и нижние подчеркивания!</label>
@@ -25,6 +38,7 @@
                     </div>
 
                     <div class="modal-footer">
+                        <input type="text" name="saveEditor" id="saveEditor" style="visibility: hidden; width: 0; height: 0;">
                         <button type="button" class="btn btn-default mt-3" data-dismiss="modal">Назад</button>
                         <button type="submit" name="directive" class="btn btn-primary mt-3">Сохранить</button>
                     </div>
@@ -38,7 +52,7 @@
         <ul>
             <li class="navItem" id="newDoc"><a href="/work/newDoc">Новый договор</a></li>
             <li class="navItem" id="signature"><a href="/work/signature">Подписаные</a></li>
-            <li class="navItem" id="templates"><a href="/work/templates">Шаблоны</a></li>
+            <li class="navItem" id="templates" style="border-color: #0e1f4d;"><a href="/work/templates">Шаблоны</a></li>
             <li class="navItem" id="settings"><a href="/work/settings">Настройки и профиль</a></li>
         </ul>
     </div>
@@ -46,7 +60,7 @@
     <div class="row">
 
         <div class="col-lg-8">
-        <form action="" method="post">
+        <form action="" method="post" name="editorForm">
             {% csrf_token %}
             <div class="row" style="margin-left: 150px;">
                 <div class="col-6">
@@ -54,17 +68,8 @@
                 </div>
                 <div class="col">
 
-                    <div class="row" style="margin-right: 50px;">
-                        <div class="col">
-                            <button name="editor_btn" type="submit" id="submit" class="mt-5" style="color: #3333a9; background-color: #fff; border: #3333a9 solid 2px; border-radius: 15px; width: 150px; height: 50px; font-weight: bold; text-align: center;" onclick="document.getElementById('edit').value = myEditor.getData();">Сохранить</button>
-                        </div>
-                        <div class=" mt-5">
-                            <form action="" method="post">
-                                {% csrf_token %}
-                                <button type="submit" name="signature" id="signature" style="color: #3333a9; background-color: #fff; border: #3333a9 solid 2px; border-radius: 15px; width: 150px; height: 50px; font-weight: bold; text-align: center;" onclick="document.getElementById('template').value = myEditor.getData();">Выставить на подпись</button>
-                                <input style="width: 0; height: 0; visibility: hidden;" name="template" id="template" type="text">
-                            
-                        </div>
+                    <div class="col">
+                        <button name="editor_btn" type="submit" id="submit" class="mt-5" style="color: #3333a9; background-color: #fff; border: #3333a9 solid 2px; border-radius: 15px; width: 150px; height: 50px; font-weight: bold; text-align: center;" onclick="document.getElementById('edit').value = myEditor.getData();">Сохранить</button>
                     </div>
                 
                     <input name="editor" id="edit" type="text" style="visibility: hidden;">
@@ -94,15 +99,29 @@
             <ul>
             {% for directive in directives %}
                 <li>
-            <button class="btn" type="button" data-toggle="modal" data-target="#myModal1" 
-            onclick="document.getElementById('name1').value = '{{directive.name}}'; document.getElementById('desc1').value = '{{ directive.desc }}'; document.getElementById('id_directive').value = '{{ directive.id }}';"
-            >
-                    <h6>{{ open }}{{ directive.name }}{{ close }}</h6>
-                    <p>{{directive.desc}}</p>
-                
-            </button>
-                    <input class="form-control" type="text" name="{{directive.name}}" id="{{directive.name}}">
-                    <label for="{{directive.name}}">Введите значение перед тем как выставить на подпись</label>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn" type="button" data-toggle="modal" data-target="#myModal1" 
+                            onclick="document.getElementById('name1').value = '{{directive.name}}'; document.getElementById('desc1').value = '{{ directive.desc }}'; document.getElementById('id_directive').value = '{{ directive.id }}';"
+                            >
+                                    <h6>{{ open }}{{ directive.name }}{{ close }}</h6>
+                                    <p>{{directive.desc}}</p>
+                                
+                            </button>
+                        </div>
+
+                        <div class="col ml-3">
+                            <button type="button" style="background-color: #fff; border: 0; transform: scale(0.5);" onclick="
+                            var area = document.createElement('textarea');
+                            document.body.appendChild(area);  
+                            area.value = '{{open}}' + '{{ directive.name }}' + '{{close}}';
+                            area.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(area); 
+                            "><img src="{% static 'img/copy.png' %}" alt=""></button>
+                        </div>
+                    </div>
+            
                 </li>
             {% endfor %}
             </ul>
@@ -112,8 +131,24 @@
 
             {% for directive in system_directives %}
                 <li>
-                    <h6>{{ open }}{{ directive.name }}{{ close }}</h6>
-                    <p>{{directive.desc}}</p>
+                    <div class="row">
+                        <div class="col">
+                            <h6>{{ open }}{{ directive.name }}{{ close }}</h6>
+                            <p>{{directive.desc}}</p>
+                        </div>
+
+                        <div class="col">
+                            <button style="background-color: #fff; border: 0; transform: scale(0.5);" onclick="
+                            var area = document.createElement('textarea');
+                            document.body.appendChild(area);  
+                            area.value = '{{open}}' + '{{ directive.name }}' + '{{close}}';
+                            area.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(area); 
+                            "><img src="{% static 'img/copy.png' %}" alt=""></button>
+                        </div>
+                    </div>
+
                 </li>
             </ul>
             {% endfor %}

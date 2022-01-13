@@ -13,7 +13,8 @@
 
     {% block nav %}
       <nav class="header header__container navbar navbar-expand-lg navbar-light ml-5 mr-5 mt-4 ">
-        <a class="navbar-brand fixed mt-3 ml-5" href="/"><img src="{% static 'img/logo-full.svg' %}" alt="OkiDoki logo" /></a>
+        <a class="navbar-brand fixed mt-3 ml-5" style="width: 100px;" href="/"><img src="{% static 'img/logo-full.svg' %}" alt="OkiDoki logo" /></a>
+        
         <div class="menu-burger__header light ml-auto">
           <span></span>
         </div>
@@ -35,20 +36,22 @@
     {% endblock nav %}
 
     {% for message in messages  %}
-      <form action="">
-          {% csrf_token %}
-          <div class="toast_" id="toast" role="alert" aria-live="assertive" style="position: fixed; right: 5%; bottom: 20%; z-index: 1;">
-              <div class="toast-header">
-              <img src="{% static 'img/logo-full.svg' %}" class="rounded mr-2">
-              <button type="submit" name='close' class="ml-auto mb-1 close" data-dismiss="toast" aria-label="Close ">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-              </div>
-              <div class="toast-body">
-                {{message}}
-              </div>
+      <div class="toast_" id="toast" role="alert" aria-live="assertive" style="position: fixed; right: 5%; bottom: 17%; z-index: 1;">
+          <div class="toast-header">
+          <img src="{% static 'img/logo-full.svg' %}" class="rounded mr-2">
+          <button type="button" name='close' class="ml-auto mb-1 close" data-dismiss="toast" aria-label="Close" onclick="
+          var message = document.getElementById('toast');
+          message.parentNode.removeChild(message);
+          ">
+              <span aria-hidden="true">&times;</span>
+          </button>
           </div>
-      </form>
+          <div class="toast-body">
+            {% autoescape off %}
+              {{message}}
+            {% endautoescape %}
+          </div>
+      </div>
     {% endfor %}
     
     {% if request.user.is_authenticated %}
@@ -95,6 +98,13 @@
           $('.header__menu').toggleClass('header__menu_active');
       });
     }); 
-    </script>
+  </script>
+
+  <script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+  </script>
+
 </body>
 </html>

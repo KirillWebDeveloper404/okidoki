@@ -9,9 +9,9 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 <link href="{% static 'main.css' %}" rel="stylesheet" type="text/css" />
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade loginModal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
+    <div class="modal-content loginModal">
       <div class="modal-body">
           {% csrf_token %}
           <div class="sing-h1 mt-5" style="font-size: 15pt; margin: auto;">
@@ -21,14 +21,14 @@
 
                 <p style="color: gray; font-size: 11pt;">Введите свой номер телефона для авторизации в сервисе</p>
 
-                <input type="text" class="form-control mt-3" name="phone" style="width: 300px; display: block; margin-left: auto; margin-right: auto;" placeholder="Номер телефона">
+                <input type="text" class="form-control mt-3" name="phone" style="width: 300px; display: block; margin-left: auto; margin-right: auto;" placeholder="Номер телефона" required>
                 <button class="next mt-3" type="sumbit" name="num" style="font-size: small; width: 300px; border: 0; border-radius: 10px;">Продолжить</button>
                 <a href="/accounts/register/" class="nav-link nav-text mt-3" style="color: #3333a9; background-color: #fff; border: #3333a9 solid 2px; border-radius: 10px; width: 300px; height: auto; font-weight: bold; text-align: center; padding-top: 11px; margin: 0 auto;">Зарегистрироваться</a><br>
             </form>
         </div>
       </div>
     </div>
-  <div class="close" style="color: #fff; border: #fff solid 2px; border-radius: 100%; height: 30px; width: 30px; text-align: center; margin-bottom: 400px;">X</div>
+  <div class="close" style="color: #fff; border: #fff solid 2px; border-radius: 100%; height: 30px; width: 30px; text-align: center; margin-bottom: 500px; margin-left: 80px; transform: scale(1.5) scaleX(1.3);">X</div>
   </div>
 </div>
 
@@ -63,7 +63,7 @@
 
     <img src="{% static 'img/pages/main/bg-vector-1.svg' %}" alt="" class="bg-vector-1" />
 
-    <div class="headers-container" style="margin-top: 200px;">
+    <div class="headers-container" style="margin-top: 250px;">
       <h1>Электронный договор для вашего бизнеса</h1>
       <h2>
         ОкіDокі простой и удобный сервис для передачи и подписи договора вашими клиентам. Забудьте про кипы архивов, принтерах и заваленных договорами полках!
@@ -87,6 +87,21 @@
   myInput.focus()
   })
 </script>
+
+<style>
+  .loginModal{
+    transform: scale(1.1);
+    margin-left: 50px;
+    margin-top: 50px;
+    height: auto;
+  }
+
+  @media screen and (max-width: 980px){
+    .loginModal{
+      transform: scale(1.35);
+    }
+  }
+</style>
 
 {% endblock main %}
 

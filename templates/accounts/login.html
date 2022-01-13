@@ -8,13 +8,13 @@
 <div style="height: 50vh;">
 {% if sms == False %}
   
-    <div class="sing-h1 mt-5" style="font-size: 15pt; margin: auto;">
+    <div class="sing-h1" style="font-size: 15pt; margin: auto; transform: scale(2); margin: 30vh auto;">
         <form action="" method="post">
             {% csrf_token %}
             <h1 class="sing-h1">Вход</h1>
             <input type="text" class="form-control mt-3" name="phone" style="width: 300px; display: block; margin-left: auto; margin-right: auto;" placeholder="Номер телефона">
             <p style="font-size: 9pt;">Нет аккаунта? <a href="/accounts/register/">Создайте его!</a></p>
-            <button class="next" type="sumbit" name="num">Далее</button>
+            <button class="next" type="sumbit" name="num" style="border: 0;">Далее</button>
         </form>
     </div>
 
@@ -22,13 +22,13 @@
 
 {% if sms == True %}
     
-    <div class="sing-h1 mt-5" style="font-size: 15pt; margin: auto;">
+    <div class="sing-h1" style="font-size: 15pt; margin: auto; transform: scale(3); margin: 30vh auto;">
         <form action="" method="post">
             {% csrf_token %}
             <h1 class="sing-h1">Вход</h1>
             <p style="font-size: 11pt;">На указаный вами номер отправлено смс с кодом</p>
             <input type="text" class="form-control mt-3" name="sms" style="width: 300px; display: block; margin-left: auto; margin-right: auto;" placeholder="Код из СМС">
-            <button class="next mt-3" type="sumbit"style="width: 300px; display: block; margin-left: auto; margin-right: auto;" name="code">Войти</button>
+            <button class="next mt-3" type="sumbit"style="width: 300px; display: block; margin-left: auto; margin-right: auto; border: 0;" name="code">Войти</button>
             <input type="text" name="phone" style="visibility: hidden;" value={{phone}}>
         </form>
     </div>

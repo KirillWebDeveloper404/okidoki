@@ -1,6 +1,20 @@
 {% extends "../base.html" %}
 {% load static %}
 
+{% block nav %}
+    {% if user.organisation == None %}
+        <nav class="navbar navbar-light bg-light" style="height: 100px; background-color: #fff; box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);">
+            <a class="navbar-brand ml-5" href="/work/signature" style="transform: scale(2); z-index: 2;"><img src="{% static 'img/back.svg' %}" alt=""></a>
+            <span class="navbar-brand mb-0 h1" style="margin: 0 auto; font-size: x-large; transform: scale(1.5);">Подписаные</span>
+        </nav>
+    {% else %}
+        <nav class="navbar navbar-light bg-light" style="height: 100px; background-color: #fff; box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);">
+            <a href="/work/signature"  class="navbar-brand ml-5"style="transform: scale(1.5); z-index: 2;"><img src="{% static 'img/back.svg' %}" alt=""></a>
+            <span class="navbar-brand mb-0 h1" style="margin: 0 auto; font-size: x-large; transform: scale(1.5);">Подписаные</span>
+        </nav>
+    {% endif %}
+{% endblock nav %}
+
 
 {% block work %}
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
@@ -20,25 +34,25 @@
     {% endif %}
 
     {% if user.organisation == None %}
-                <div class="nav-bar-phone fixed-bottom">
-                    <ul>
-                        <li class="navItem-phone" id="signature">
-                            <a href="/work/signature">
-                            <img class="nav-icon" src="{% static 'img/signatured.svg' %}"><br>
-                            <h3 class="nav-text-phone">Подписаные</h3>
-                            </a>
-                        </li>
-                        <li class="navItem-phone" style="margin-left: 25%;" id="settings">
-                            <a href="/work/settings">
-                            <img class="nav-icon" src="{% static 'img/profile.svg' %}" alt=""><br>
-                            <h3 class="nav-text-phone">Настройки и профиль</h3>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+        <div class="nav-bar-phone fixed-bottom" style="transform: scale(2);">
+            <ul>
+                <li class="navItem-phone" id="signature">
+                    <a href="/work/signature">
+                    <img class="nav-icon" src="{% static 'img/signatured.svg' %}"><br>
+                    <h3 class="nav-text-phone" style="margin-top: auto; font-size: medium;">Подписаные</h3>
+                    </a>
+                </li>
+                <li class="navItem-phone" style="margin-left: 10%;" id="settings">
+                    <a href="/work/settings">
+                    <img class="nav-icon" src="{% static 'img/profile.svg' %}" alt=""><br>
+                    <h3 class="nav-text-phone" style="margin-top: auto; font-size: medium;">Настройки и профиль</h3>
+                    </a>
+                </li>
+            </ul>
+        </div>
     {% endif %}
 
-    <div style="margin: 25px auto; width: 750px; border: 2px solid #0e1f4d; border-radius: 10px; padding: 25px;">
+    <div style="margin: 25px auto; width: 750px; border: 2px solid #0e1f4d; border-radius: 10px; padding: 25px; font-size: xx-large;">
         {% autoescape off %}
             {{text}}
             <img src="{% static 'img/signed.png' %}" alt="">
@@ -47,3 +61,7 @@
 
    </div>
 {% endblock work %}
+
+{% block footer %}
+  
+{% endblock footer %}

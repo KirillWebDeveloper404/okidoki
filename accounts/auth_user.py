@@ -14,7 +14,7 @@ class UserAuth(ModelBackend):
             user.code = code
             print(code)
             user.save()
-            return True
+            return code
         except Exception as e:
             return None
 

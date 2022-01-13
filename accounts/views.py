@@ -108,7 +108,7 @@ def registerClient(req):
         'step': step
     })
 
-def loginView(req):
+def loginView(req, next='work', page='settings'):
     messages=[]
     if req.method == 'POST':
         data = req.POST.dict()
@@ -135,7 +135,9 @@ def loginView(req):
                 messages.append("Неверный смс код или номер телефона")
             else:
                 login(req, user)
-                return redirect('work', page='settings')
+                if page == 'settings':
+                    return redirect(next, page=page)
+                return redirect(next, id=page)
 
     return render(req, 'accounts/login.html', 
     {
