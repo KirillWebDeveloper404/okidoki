@@ -6,16 +6,21 @@ from .models import User
 from .auth_user import UserAuth as auth
 
 
-def register(req):
+def register(req, next='work', page='settings', message=''):
     step = 1
+    is_match = False
     messages = []
+    if message:
+        messages.append(message)
     if req.method == 'POST':
         regForm = UserRegisterForm(req.POST)
         if req.POST.get('close'):
             messages = []
         if regForm.is_valid() and '4' in req.POST.dict():
-            if User.objects.filter(phone=regForm.cleaned_data['phone']):
+            if User.objects.filter(phone=regForm.cleaned_data['phone']) or User.objects.filter(email=regForm.cleaned_data['email']):
                 messages.append("Такой пользователь уже зарегистрирован!")
+                is_match = True
+                
             else:
                 data = regForm.cleaned_data
                 user = User()
@@ -34,10 +39,14 @@ def register(req):
         elif '5' in req.POST.dict():
             user = auth.authenticate(req.POST.dict()['phone'].replace(' ', '').replace('(', '').replace(')', '').replace('-', ''), req.POST.dict()['sms'])
             if user == None:
-                messages.append("Неверный смс код или номер телефона")
+                messages.append("Неверный смс код")
+                step = 4
             else:
                 login(req, user)
-                return redirect('work', page='settings')
+                return redirect(next, page=page)
+
+    if is_match:
+        step = 1
 
     
     initial = {}
@@ -60,16 +69,18 @@ def register(req):
         'messages': messages
     })
 
-def registerClient(req):
+def registerClient(req, next='work', page='settings'):
     step = 1
     messages = []
+    is_match = False
     if req.method == 'POST':
         regForm = UserRegisterForm(req.POST)
         if req.POST.get('close'):
             messages = []
         if regForm.is_valid():
-            if User.objects.filter(phone=regForm.cleaned_data['phone']):
+            if User.objects.filter(phone=regForm.cleaned_data['phone']) or User.objects.filter(email=regForm.cleaned_data['email']):
                 messages.append("Такой пользователь уже зарегистрирован!")
+                is_match = True
 
             elif 'send_sms' in req.POST.dict():
                 step = 2
@@ -77,16 +88,26 @@ def registerClient(req):
                 data['phone'] = data['phone'].replace(' ', '').replace('(', '').replace(')', '').replace('-', '')
                 user = User()
                 user = user.create(data)
+                user.verEmail = False
                 user.save()
                 auth.send_sms(req.POST.dict()['phone'].replace(' ', '').replace('(', '').replace(')', '').replace('-', ''))
 
         if 'login' in req.POST.dict():
           user = auth.authenticate(req.POST.dict()['phone'].replace(' ', '').replace('(', '').replace(')', '').replace('-', ''), req.POST.dict()['sms'])
           if user == None:
-              messages.append("Неверный смс код или номер телефона")
+              messages.append("Неверный смс код")
+              step = 2
           else:
               login(req, user)
-              return redirect('work', page='settings')
+
+              if page != 'settings':
+                  return redirect(next, id=page)
+              else:
+                  return redirect(next, page=page)
+
+
+    if is_match:
+        step = 1
     
     initial = {}
 
@@ -112,15 +133,14 @@ def loginView(req, next='work', page='settings'):
     messages=[]
     if req.method == 'POST':
         data = req.POST.dict()
-        print(data)
+        
         if 'phone' in data and 'sms' not in data:
             res = auth.send_sms(str(data['phone']).replace(' ', '').replace('(', '').replace(')', '').replace('-', ''))
             if res:
                 return render(req, 'accounts/login.html', 
                 {
                     'sms': True,
-                    'phone': str(data['phone']).replace(' ', '').replace('(', '').replace(')', '').replace('-', ''),
-                    'messages': ["Смс отправлено!"]
+                    'phone': str(data['phone']).replace(' ', '').replace('(', '').replace(')', '').replace('-', '')
                 })
             else:
                 return render(req, 'accounts/login.html', 
@@ -142,7 +162,9 @@ def loginView(req, next='work', page='settings'):
     return render(req, 'accounts/login.html', 
     {
         'sms': False,
-        'messages': messages
+        'messages': messages,
+        'next': next,
+        'page': page
     })
 
 def logoutView(req):

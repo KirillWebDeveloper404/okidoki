@@ -12,10 +12,13 @@ class Template(models.Model):
     name = models.CharField(max_length=200)
     file = models.FileField(verbose_name="Шаблон", upload_to=content_file_name)
 
+    is_exist = models.BooleanField(verbose_name="удаление", blank=True, default=True)
+
     def create(self, data):
         self.user = data['id']
         self.name = data['name']
         self.file = data['file']
+        self.is_exist = True
 
     def __str__(self) -> str:
         return self.name
@@ -34,7 +37,7 @@ class Directive(models.Model):
 
     def create(self, data):
         self.template = data['template']
-        self.name = data['name']
+        self.name = str(data['name']).replace(' ', '_')
         self.desc = data['desc']
 
     def __str__(self) -> str:
@@ -44,6 +47,25 @@ class Directive(models.Model):
         managed = True
         verbose_name = 'Directive'
         verbose_name_plural = 'Directives'
+
+
+class SystemDirective(models.Model):
+
+    name = models.CharField(max_length=50, verbose_name='Название которое увидят пользователи')
+    desc = models.TextField(verbose_name='Описание которое увидят пользователи')
+    default_value = models.TextField(verbose_name='Значение подставляющиеся автоматически', blank=True, default='')
+
+    def create(self, data):
+        self.name = data['name']
+        self.desc = data['desc']
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        managed = True
+        verbose_name = 'SystemDirective'
+        verbose_name_plural = 'SystemDirectives'
 
 
 class SignatureDocx(models.Model):

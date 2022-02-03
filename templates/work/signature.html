@@ -1,18 +1,50 @@
 {% extends "../base.html" %}
 {% load static %}
 
+{% block bg %}
+  
+{% endblock bg %}
+
+{% block nav %}
+    <div style="position: fixed; top: 0; left: 0; width: 100%;">
+        <nav class="navbar d-lg-none" style="height: 100px; background-color: #fff; box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); height: 120px;">
+            <span class="navbar-brand mb-0 h1" style="margin: 0 auto; font-size: x-large; transform: scale(1.5);">Новый договор</span>
+        </nav>
+    </div>
+
+    <nav style="background-color: rgba(0, 0, 0, 0);" class="header header__container navbar navbar-expand-lg navbar-light d-none d-lg-block">
+        <a class="navbar-brand mt-3 ml-5" style="width: 100px;" href="/"><img src="{% static 'img/logo-full.svg' %}" alt="OkiDoki logo" /></a>        
+        <div class="mr-auto header__nav" id="navbarSupportedContent" style="background-color: rgba(0, 0, 0, 0); margin-top: -50px;">
+        <ul class="ml-auto menu header__menu">
+            <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Возможности</a></li>
+            <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Цены</a></li>
+            <li class="menu__item" style="margin-left: 50px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; background-color: #e9ecf7; border-radius: 25px; width: 150px; height: 50px; font-weight: bold; text-align: center; padding-top: 15px;">Контакты</a></li>
+            {% if request.user.is_authenticated %}
+                <li class="nav-item menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="/work/settings" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Профиль</a></li>
+            {% endif %}
+            {% if request.user.is_authenticated == False %}
+                <li class="nav-item menu__item" style="margin-left: 50px;  margin-top: 10px;"><a href="/accounts/login" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Войти</a></li>
+            {% endif %}
+        </ul>
+        </div>
+    </nav>
+{% endblock nav %}
+
 
 {% block work %}
+<div class="workPage" style="margin: 150px auto; width: 90vw;">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 <link rel="stylesheet" href="{% static 'work.css' %}">
 
-<div class="workPage">
+<div>
+
 
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" heiht='500px'>
         <div class="modal-dialog modal-x" role="document">
-          <div class="modal-content">
+
+            <div class="modal-content d-lg-none" style="width: 300px; margin: 30vh auto; transform: scale(3);">
               <div class="modal-header">
-                  <div class="madal-title"><h1 class="title-blok mt-3 ml-3">Подтверждение</h1></div>
+                  <div class="madal-title"><h1 class="title-blok mt-3 ml-3" style="font-size: xx-large;">Подтверждение</h1></div>
               </div>
               
                 <form action="" method="post">
@@ -28,24 +60,45 @@
                     </div>
                 </form>
             </div>
+
+            <div class="modal-content d-none d-lg-block" style="width: 300px; margin: 30vh auto;">
+                <div class="modal-header">
+                    <div class="madal-title"><h1 class="title-blok mt-3 ml-3" style="font-size: xx-large;">Подтверждение</h1></div>
+                </div>
+                
+                  <form action="" method="post">
+                      <div class="modal-body">
+                              {% csrf_token %}
+                              <label for="sms">На ваш номер отправлено смс с кодом подтверждения</label>
+                              <input type="text" name="sms" class="form-control" placeholder="СМС код">
+                      </div>
+  
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-default mt-3" data-dismiss="modal">Назад</button>
+                          <button type="submit" class="btn btn-primary mt-3">Подписать</button>
+                      </div>
+                  </form>
+              </div>
+
           </div>
         </div>
       </div>
 
-    <div class="nav-bar">
-        <ul>
-            <li class="navItem" id="signature"><a href="/work/signature">Подписаные</a></li>
-            <li class="navItem" id="settings"><a href="/work/settings">Настройки и профиль</a></li>
-        </ul>
+      <div class="win" style="width: 100%; min-height: 65vh; margin: 15px auto; border-radius: 5px; border: 0; -webkit-box-shadow: 4px 4px 8px 8px rgba(34, 60, 80, 0.2); -moz-box-shadow: 4px 4px 8px 8px rgba(34, 60, 80, 0.2); box-shadow: 4px 4px 8px 8px rgba(34, 60, 80, 0.2);text-decoration: none; color: #000;">
+        <div style="width: 85%; margin: 0 auto; padding-top: 30px; padding-bottom: 30px;">
+            {% autoescape off %}
+                {{text}}
+            {% endautoescape %}
+        </div>
     </div>
 
-    <div style="margin: 0 auto; width: 750px; border: 2px solid #0e1f4d; border-radius: 10px; padding: 25px;">
-        {% autoescape off %}
-            {{text}}
-        {% endautoescape %}
-    </div>
-
-    <button name="send_sms" type="button" class="nav-link nav-text mt-3" style="margin: 0 auto; color: #fff; background-color: #3333a9; border-radius: 25px; width: 150px; height: 50px; font-weight: bold;text-align: center; padding-top: 15px;" data-toggle="modal" data-target="#myModal">Подписать</button>
+    <button name="send_sms" type="button" class="nav-link nav-text mt-3" style="margin: 10px auto; color: #fff; background-color: #3333a9; border-radius: 5px; width: 100%; height: 90px; font-weight: bold; text-align: center; font-size: 30pt;" data-toggle="modal" data-target="#myModal">Подписать</button>
 
    </div>
+
+
+
+<br><br><br><br><br>
+<br><br><br><br><br>
+</div>
 {% endblock work %}

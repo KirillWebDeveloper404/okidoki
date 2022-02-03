@@ -1,18 +1,34 @@
 {% extends "../base.html" %}
 {% load static %}
 
+{% block bg %}
+  
+{% endblock bg %}
+
 {% block nav %}
-    {% if user.organisation == None %}
-        <nav class="navbar navbar-light bg-light" style="height: 100px; background-color: #fff; box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);">
+    <div style="position: fixed; top: 0; left: 0; width: 100%;">
+        <nav class="navbar d-lg-none" style="height: 100px; background-color: #fff; box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2); height: 120px;">
             <a class="navbar-brand ml-5" href="/work/signature" style="transform: scale(2); z-index: 2;"><img src="{% static 'img/back.svg' %}" alt=""></a>
-            <span class="navbar-brand mb-0 h1" style="margin: 0 auto; font-size: x-large; transform: scale(1.5);">Подписаные</span>
+            <span class="navbar-brand mb-0 h1" style="margin: 0 auto; font-size: x-large; transform: scale(1.5);">Подписанные</span>
         </nav>
-    {% else %}
-        <nav class="navbar navbar-light bg-light" style="height: 100px; background-color: #fff; box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);">
-            <a href="/work/signature"  class="navbar-brand ml-5"style="transform: scale(1.5); z-index: 2;"><img src="{% static 'img/back.svg' %}" alt=""></a>
-            <span class="navbar-brand mb-0 h1" style="margin: 0 auto; font-size: x-large; transform: scale(1.5);">Подписаные</span>
-        </nav>
-    {% endif %}
+    </div>
+    
+    <nav style="background-color: rgba(0, 0, 0, 0);" class="header header__container navbar navbar-expand-lg navbar-light d-none d-lg-block">
+        <a class="navbar-brand mt-3 ml-5" style="width: 100px;" href="/"><img src="{% static 'img/logo-full.svg' %}" alt="OkiDoki logo" /></a>        
+        <div class="mr-auto header__nav" id="navbarSupportedContent" style="background-color: rgba(0, 0, 0, 0); margin-top: -50px;">
+        <ul class="ml-auto menu header__menu">
+            <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Возможности</a></li>
+            <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Цены</a></li>
+            <li class="menu__item" style="margin-left: 50px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; background-color: #e9ecf7; border-radius: 25px; width: 150px; height: 50px; font-weight: bold; text-align: center; padding-top: 15px;">Контакты</a></li>
+            {% if request.user.is_authenticated %}
+                <li class="nav-item menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="/work/settings" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Профиль</a></li>
+            {% endif %}
+            {% if request.user.is_authenticated == False %}
+                <li class="nav-item menu__item" style="margin-left: 50px;  margin-top: 10px;"><a href="/accounts/login" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Войти</a></li>
+            {% endif %}
+        </ul>
+        </div>
+    </nav>
 {% endblock nav %}
 
 
@@ -20,46 +36,61 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 <link rel="stylesheet" href="{% static 'work.css' %}">
 
-<div class="workPage">
-
-    {% if user.organisation != None %}
-        <div class="nav-bar">
-            <ul>
-                <li class="navItem" id="newDoc"><a href="/work/newDoc">Новый договор</a></li>
-                <li class="navItem" id="signature"><a href="/work/signature">Подписаные</a></li>
-                <li class="navItem" id="templates"><a href="/work/templates">Шаблоны</a></li>
-                <li class="navItem" id="settings"><a href="/work/settings">Настройки и профиль</a></li>
-            </ul>
-        </div>
-    {% endif %}
+{% if user.organisation != None %}
+    <div class="workPage">
+{% else %}
+    <div class="workPage" style="margin: 150px auto; width: 90vw;">
+{% endif %}
 
     {% if user.organisation == None %}
-        <div class="nav-bar-phone fixed-bottom" style="transform: scale(2);">
-            <ul>
-                <li class="navItem-phone" id="signature">
-                    <a href="/work/signature">
-                    <img class="nav-icon" src="{% static 'img/signatured.svg' %}"><br>
-                    <h3 class="nav-text-phone" style="margin-top: auto; font-size: medium;">Подписаные</h3>
-                    </a>
-                </li>
-                <li class="navItem-phone" style="margin-left: 10%;" id="settings">
-                    <a href="/work/settings">
-                    <img class="nav-icon" src="{% static 'img/profile.svg' %}" alt=""><br>
-                    <h3 class="nav-text-phone" style="margin-top: auto; font-size: medium;">Настройки и профиль</h3>
-                    </a>
-                </li>
+        <div class="nav-bar d-none d-lg-block">
+            <ul style="white-space:nowrap; overflow-x: auto; height: 60px;">
+                <a class="navItem navItemActive" style="margin-left: 30%;" id="signature" href="/work/signature">Подписанные</a>
+                <a class="navItem" style="margin-left: 10%;" id="settings" href="/work/settings">Настройки и профиль</a>
+            </ul>
+        </div>
+
+    {% else %}
+        <div class="nav-bar">
+            <ul style="white-space:nowrap; overflow-x: auto; height: 60px;">
+                <a class="navItem" id="newDoc" href="/work/newDoc" style="margin-left: 0;">Новый договор</a>
+                <a class="navItem navItemActive" id="signature" href="/work/signature">Подписанные</a>
+                <a class="navItem" id="templates" href="/work/templates">Шаблоны</a>
+                <a class="navItem" id="settings" href="/work/settings">Настройки и профиль</a>
             </ul>
         </div>
     {% endif %}
 
-    <div style="margin: 25px auto; width: 750px; border: 2px solid #0e1f4d; border-radius: 10px; padding: 25px; font-size: xx-large;">
+    <div class="win" style="width: 100%; margin: 15px auto; border-radius: 5px; border: 0; -webkit-box-shadow: 4px 4px 8px 8px rgba(34, 60, 80, 0.2); -moz-box-shadow: 4px 4px 8px 8px rgba(34, 60, 80, 0.2); box-shadow: 4px 4px 8px 8px rgba(34, 60, 80, 0.2);text-decoration: none; color: #000;">
         {% autoescape off %}
             {{text}}
             <img src="{% static 'img/signed.png' %}" alt="">
         {% endautoescape %}
     </div>
 
+    <style>
+    .win{
+        margin: 25px auto;
+        width: 750px;
+        border: 2px solid #0e1f4d;
+        border-radius: 10px;
+        padding: 25px;
+        font-size: large;
+        padding: 50px; 
+    }
+    @media (max-width: 980px) {
+        .win{
+            font-size: xx-large;
+        }        
+    }
+    </style>
+
    </div>
+
+   
+<br><br><br><br><br>
+<br><br><br><br><br>
+
 {% endblock work %}
 
 {% block footer %}

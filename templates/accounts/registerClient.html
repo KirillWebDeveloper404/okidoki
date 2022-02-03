@@ -2,14 +2,57 @@
 
 {% load static %}
 
-{% block main %}
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-<link href="{% static 'accounts.css' %}" rel="stylesheet" type="text/css" />
+{% block nav %}
+<nav style="background-color: rgba(0, 0, 0, 0);" class="header header__container navbar navbar-expand-lg navbar-light ml-5 mr-5 mt-4 d-none d-lg-block">
+    <a class="navbar-brand fixed ml-5" style="width: 100px;" href="/"><img src="{% static 'img/logo-full.svg' %}" alt="OkiDoki logo" /></a>
 
-<div style="margin-top: 150px; height: 75vh;">
+    <div class="mr-auto header__nav" id="navbarSupportedContent" style="background-color: rgba(0, 0, 0, 0);">
+      <ul class="ml-auto menu header__menu">
+          <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Возможности</a></li>
+          <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Цены</a></li>
+          <li class="menu__item" style="margin-left: 50px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; background-color: #e9ecf7; border-radius: 25px; width: 150px; height: 50px; font-weight: bold; text-align: center; padding-top: 15px;">Контакты</a></li>
+          {% if request.user.is_authenticated %}
+              <li class="nav-item menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="/work/settings" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Профиль</a></li>
+          {% endif %}
+          {% if request.user.is_authenticated == False %}
+            <li class="nav-item menu__item" style="margin-left: 50px;  margin-top: 10px;"><a href="/accounts/login" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Войти</a></li>
+          {% endif %}
+      </ul>
+    </div>
+  </nav>
+
+
+<div style="position: absolute; left: 0; top 0; z-index: 5;">
+    <a href="/accounts/login" class="d-lg-none mt-5 ml-5" style="display: block; font-size: xx-large; font-weight: 700; color: black;"><img src="{% static 'img/back.svg' %}" style="margin-bottom: 5px;"> Вход</a>
+</div>
+<nav style="background-color: rgba(0, 0, 0, 0);" class="header header__container navbar navbar-expand-lg navbar-light ml-5 mr-5 mt-4 d-lg-none">
+    <a class="navbar-brand" style="width: 100px; margin: 190px 26vw; transform: scale(3);" href="/"><img src="{% static 'img/logo-full.svg' %}" alt="OkiDoki logo" /></a>
+</nav>
+{% endblock nav %}
+
+{% block main %}
+<style>
+    .signForm{
+        font-size: 15pt;
+        margin-top: 200px;
+    }
+
+    @media(max-width: 980px){
+        .signForm{
+            transform: scale(1.5);
+            margin: 400px 26vw;
+        }
+        .loginForm{
+            transform: scale(1.2);
+            margin-top: 100px;
+        }
+    }
+</style>
+
+<div class="signForm" style="width: 500px; margin: 350px auto;">
     <h1 class="sing-h1">Регистрация</h1>
 
-    <ol class="c-stepper ">
+    <ol class="c-stepper">
         <li class="c-stepper__item">
             <h3 class="c-stepper__title digit active">1</h3>
             <p class="c-stepper__desc mt-3">Данные</p>
@@ -20,7 +63,7 @@
         </li>
     </ol>
 
-    <div class="row align-items-center">
+    <div class="row align-items-center loginForm">
         <div class="col-offset-8 mx-auto mt-3">
             <form action="" method="post">
                 {% csrf_token %}
@@ -42,8 +85,8 @@
                     {{form.registr}}<br>
                     <label for="input">Дата рождения</label>
                     {{form.date_burn}}<br>
-                    <a href="/accounts/register/" class="nav-link nav-text" style="color: #3333a9; background-color: #fff; border: #3333a9 solid 2px; border-radius: 15px; width: auto; height: auto; font-weight: bold; text-align: center; padding-top: 11px;">Зарегистрироваться как предприниматель</a><br>
-                    <button class="next" type="submit" name="send_sms">Далее</button>
+                    <button class="next" type="submit" name="send_sms" style="width: 500px;">Далее</button>
+                    <a href="/accounts/register/" class="nav-link nav-text" style="margin-top: 20px; color: #3333a9; background-color: #fff; border: #3333a9 solid 2px; border-radius: 5px; width: 500px; height: auto; font-weight: bold; text-align: center; padding-top: 11px;">Зарегистрироваться как предприниматель</a>
                     <script>document.getElementById("2").classList.add('active');</script>
                     <div class="none" style="visibility: hidden;">
                     <script>document.getElementById("2").classList.remove('active');</script>
@@ -52,10 +95,10 @@
 
                 {% if step == 2 %}
 
-                    <label for="input">На ваш номер отправлено смс с кодом. Введите его для завершения регистрации</label>
-                    <div style="margin-left: 220px;">
-                        <input type="text" class="form-control" name="sms" style="width: 200px;" placeholder="Код из СМС">
-                        <button class="next mt-5" type="sumbit" name="login">Далее</button>
+                    <label for="input" style="text-align: center; margin-top: 10px;">На ваш номер отправлено смс с кодом. Введите его для завершения регистрации</label>
+                    <div style="margin: 0 auto; width: calc(100% - 60px); text-align: center;">
+                        <input type="text" class="form-control mt-3" name="sms" style="width: 50%; display: block; margin-left: auto; margin-right: auto; transform: scale(2);" placeholder="Код из СМС">
+                           <button class="next" type="sumbit" name="login" style="width: 50%; display: block; margin-left: auto; margin-right: auto; margin-top: 70px; transform: scale(2);">Далее</button>
                     </div>
 
                     <div class="none" style="visibility: hidden;">
@@ -63,6 +106,7 @@
                     </div>
                   
                     <script>document.getElementById("2").classList.add('active');</script>
+
                 {% endif %}
 
             </form>
@@ -70,4 +114,14 @@
 
     </div>
 </div>
+<br><br><br>
+
+<script>
+    $(function($) {
+        $("#phone").mask('+9 (999) 999-99-99');
+        $("#pasport").mask('9999 999999');
+        $("#pasport_code").mask("999-999");
+    });
+</script>
+
 {% endblock main %}

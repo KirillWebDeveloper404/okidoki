@@ -1,20 +1,56 @@
 {% extends  '../base.html' %}
 {% load static %}
 
-{% block main %}
-<link href="{% static 'accounts.css' %}" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+{% block nav %}
+<nav style="background-color: rgba(0, 0, 0, 0);" class="header header__container navbar navbar-expand-lg navbar-light ml-5 mr-5 mt-4 d-none d-lg-block">
+    <a class="navbar-brand fixed mt-3 ml-5" style="width: 100px;" href="/"><img src="{% static 'img/logo-full.svg' %}" alt="OkiDoki logo" /></a>
+    
+    <div class="menu-burger__header light ml-auto">
+      <span></span>
+    </div>
 
-<div style="height: 50vh;">
+    <div class="header__nav" id="navbarSupportedContent" style="background-color: rgba(0, 0, 0, 0);">
+      <ul class="ml-auto menu header__menu">
+          <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Возможности</a></li>
+          <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Цены</a></li>
+          <li class="menu__item" style="margin-left: 50px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; background-color: #e9ecf7; border-radius: 25px; width: 150px; height: 50px; font-weight: bold; text-align: center; padding-top: 15px;">Контакты</a></li>
+          {% if request.user.is_authenticated %}
+              <li class="nav-item menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="/work/settings" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Профиль</a></li>
+          {% endif %}
+          {% if request.user.is_authenticated == False %}
+            <li class="nav-item menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="/accounts/login" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Войти</a></li>
+          {% endif %}
+      </ul>
+    </div>
+  </nav>
+
+<nav style="background-color: rgba(0, 0, 0, 0);" class="header header__container navbar navbar-expand-lg navbar-light d-lg-none" style="text-align: center; margin: 0 auto;">
+    <a class="navbar-brand" style="width: 100px; margin: 150px 30%; transform: scale(4);" href="/"><img src="{% static 'img/logo-full.svg' %}" alt="OkiDoki logo" /></a>
+</nav>
+{% endblock nav %}
+
+{% block main %}
+<style>
+    .signForm{
+        font-size: 15pt;
+        margin: 200px auto;
+    }
+</style>
+
+<div class="d-none d-lg-block" style="width: 100%; margin: 0 auto; text-align: center;">
 {% if sms == False %}
   
-    <div class="sing-h1" style="font-size: 15pt; margin: auto; transform: scale(2); margin: 30vh auto;">
+    <div class="sing-h1 signForm">
         <form action="" method="post">
             {% csrf_token %}
             <h1 class="sing-h1">Вход</h1>
-            <input type="text" class="form-control mt-3" name="phone" style="width: 300px; display: block; margin-left: auto; margin-right: auto;" placeholder="Номер телефона">
-            <p style="font-size: 9pt;">Нет аккаунта? <a href="/accounts/register/">Создайте его!</a></p>
-            <button class="next" type="sumbit" name="num" style="border: 0;">Далее</button>
+            <input type="text" class="form-control mt-3" name="phone" style="width: 300px; display: block; margin-left: auto; margin-right: auto;" placeholder="Номер телефона" required>
+            {% if next == 'work' %}
+                <p style="font-size: 9pt;">Нет аккаунта? <a href="/accounts/register">Создайте его!</a></p>
+            {% else %}
+                <p style="font-size: 9pt;">Нет аккаунта? <a href="/accounts/register/{{next}}/{{page}}">Создайте его!</a></p>
+            {% endif %}
+            <button class="next" type="sumbit" name="num">Далее</button>
         </form>
     </div>
 
@@ -22,17 +58,58 @@
 
 {% if sms == True %}
     
-    <div class="sing-h1" style="font-size: 15pt; margin: auto; transform: scale(3); margin: 30vh auto;">
+    <div class="sing-h1 signForm">
         <form action="" method="post">
             {% csrf_token %}
             <h1 class="sing-h1">Вход</h1>
             <p style="font-size: 11pt;">На указаный вами номер отправлено смс с кодом</p>
-            <input type="text" class="form-control mt-3" name="sms" style="width: 300px; display: block; margin-left: auto; margin-right: auto;" placeholder="Код из СМС">
-            <button class="next mt-3" type="sumbit"style="width: 300px; display: block; margin-left: auto; margin-right: auto; border: 0;" name="code">Войти</button>
+            <input type="text" class="form-control mt-3" name="sms" style="width: 300px; display: block; margin-left: auto; margin-right: auto;" placeholder="Код из СМС" required>
+            <button class="next mt-3" type="sumbit"style="width: 300px; display: block; margin-left: auto; margin-right: auto;" name="code">Войти</button>
             <input type="text" name="phone" style="visibility: hidden;" value={{phone}}>
         </form>
     </div>
 
 {% endif %}
 </div>
+
+
+<div class="d-lg-none" style="width: 100%; margin: 0 auto; text-align: center;">
+{% if sms == False %}
+  
+    <div class="sing-h1 signForm">
+        <form action="" method="post">
+            {% csrf_token %}
+            <h1 class="sing-h1" style="font-size: 75pt;">Вход</h1>
+            <p style="font-size: 25pt;">Введите свой номер телефона для авторизации</p>
+            <input type="text" class="form-control" name="phone" style="width: 300px; display: block; margin: 100px auto; transform: scale(3);" placeholder="Номер телефона" required>
+            <button class="next" type="submit" name="num" style="margin: 50px auto; width: 300px; border-radius: 15px; border: 0; font-weight: bold; text-align: center; transform: scale(3);">Продолжить</button><br>
+            
+            {% if next == 'work' %}
+                <a href="/accounts/registerClient/" class="nav-link nav-text" style="margin: 100px auto; color: #3333a9; background-color: #fff; border: #3333a9 solid 2px; border-radius: 15px; width: 300px; height: auto; font-weight: bold; text-align: center; padding-top: 11px; transform: scale(3);">Зарегистрироваться</a><br>
+            {% else %}
+                <a href="/accounts/registerClient/{{next}}/{{page}}" class="nav-link nav-text" style="margin: 100px auto; color: #3333a9; background-color: #fff; border: #3333a9 solid 2px; border-radius: 15px; width: 300px; height: auto; font-weight: bold; text-align: center; padding-top: 11px; transform: scale(3);">Зарегистрироваться</a><br>
+            {% endif %}
+
+        </form>
+    </div>
+
+{% endif %}
+
+{% if sms == True %}
+
+    <div class="sing-h1 signForm">
+        <form action="" method="post">
+            {% csrf_token %}
+            <h1 class="sing-h1" style="font-size: 75pt;">Вход</h1>
+            <p style="font-size: 25pt;">На указаный вами номер отправлено смс с кодом</p>
+            <input type="text" class="form-control" name="sms" style="width: 300px; display: block; margin: 100px auto; transform: scale(3);" placeholder="Код из СМС" required>
+            <button class="next" type="submit" name="code" style="margin: 50px auto; width: 300px; border-radius: 15px; border: 0; font-weight: bold; text-align: center; transform: scale(3);">Войти</button>
+            
+            <input type="text" name="phone" style="visibility: hidden; width: 0; height: 0;" value={{phone}}>
+        </form>
+    </div>
+
+{% endif %}
+</div>
+
 {% endblock %}

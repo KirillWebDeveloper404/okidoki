@@ -10,5 +10,4 @@ urlpatterns = [
     path('work/', include('work.urls')),
     path('', include('main.urls'))
 ]
-
 urlpatterns += staticfiles_urlpatterns()

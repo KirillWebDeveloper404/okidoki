@@ -63,6 +63,5 @@ def create_template(form, req):
 
 
 def delete(signatureDoc):
-    print(not(signatureDoc.client), signatureDoc.client)
     if not(signatureDoc.client):
         signatureDoc.delete()

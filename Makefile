@@ -15,7 +15,6 @@ log:
 
 stop:
 	docker stop okidoki
-	docker image rm kirillwebdev404/okidoki
 
 start:
 	make build

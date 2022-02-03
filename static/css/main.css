@@ -54,7 +54,7 @@ body {
     box-shadow: none;
     color: #3333a9;
     flex-shrink: 0;
-    border-radius: 15px;
+    border-radius: 5px;
     min-width: 180px;
     font-size: medium;
 }

@@ -1,10 +1,9 @@
-from django.conf.urls import url
 from django.core.files.base import File
-from django.http.response import HttpResponse, JsonResponse
+from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from accounts.models import User
 from work.forms import DiretiveForm, TemplateUpload
-from work.models import Directive, SignatureDocx, Template
+from work.models import Directive, SignatureDocx, SystemDirective, Template
 import mammoth
 from docx import Document
 from htmldocx import HtmlToDocx
@@ -75,9 +74,9 @@ def work(req, page, message = None):
         return redirect('main')
 
 
-def verEmail(req, code):
+def verEmail(req, id, q='0'):
     if req.user.is_authenticated:
-        user = auth.authenticate(req.user.phone, code)
+        user = auth.authenticate(req.user.phone, id)
         if user:
             user.verEmail = True
             user.save()
@@ -88,23 +87,16 @@ def verEmail(req, code):
             'messages': ['Почта подтверждена!']
         })
     else:
-        return redirect('home')
+        return redirect("login", next='verEmail', page=id)
 
 
 def editDoc(req, id):
     messages = []
     saveEditor = ''
-    system_directives = [
-        {'name': 'current_date', 'desc': 'Текущая дата(подставляется автоматически)'},
-        {'name': 'disclaimer', 'desc': 'дисклеймер'},
-        {'name': 'client_name', 'desc': 'ФИО клиента'},
-        {'name': 'client_phone', 'desc': 'Номер телефона клиента'},
-        {'name': 'client_email', 'desc': 'E-mail клиента'}
-    ]
+    system_directives = SystemDirective.objects.all().values()
 
     try:
         if req.method == 'POST':
-            print(req.POST)
             if 'signature' in req.POST:
                 document = Template.objects.get(id=id)
                 html = req.POST['template']
@@ -129,7 +121,6 @@ def editDoc(req, id):
                     file_path_ = file_path.replace('templates', 'signatured')
 
                     try:
-                        print(file_path_)
                         os.makedirs(file_path_.replace(file_path_.split('/')[-1], ''))
                     except Exception as e:
                         print(e)
@@ -154,7 +145,15 @@ def editDoc(req, id):
                     data['template'] = Template.objects.get(id = id)
                     directive.create(data)
                     directive.save()
-                    saveEditor = req.POST['saveEditor']
+
+                    file_doc = Template.objects.get(id = id)
+                    file_path = str(file_doc.file.path).replace("\\", '/')
+                    file_path = os.path.join(settings.BASE_DIR, file_path)
+                    html = req.POST['editorValue']
+                    document = Document()
+                    new_parser = HtmlToDocx()
+                    new_parser.add_html_to_document(html, document)
+                    document.save(file_path)
 
             if 'directive_edit' in req.POST:
                 id_directive = req.POST['id']
@@ -162,11 +161,29 @@ def editDoc(req, id):
                 directive.name = req.POST['name']
                 directive.desc = req.POST['desc']
                 directive.save()
+                
+                file_doc = Template.objects.get(id = id)
+                file_path = str(file_doc.file.path).replace("\\", '/')
+                file_path = os.path.join(settings.BASE_DIR, file_path)
+                html = req.POST['editorValue1']
+                document = Document()
+                new_parser = HtmlToDocx()
+                new_parser.add_html_to_document(html, document)
+                document.save(file_path)
 
             if 'directive_delete' in req.POST:
                 id_directive = req.POST['id']
                 directive = Directive.objects.get(id=id_directive)
                 directive.delete()
+
+                file_doc = Template.objects.get(id = id)
+                file_path = str(file_doc.file.path).replace("\\", '/')
+                file_path = os.path.join(settings.BASE_DIR, file_path)
+                html = req.POST['editorValue1']
+                document = Document()
+                new_parser = HtmlToDocx()
+                new_parser.add_html_to_document(html, document)
+                document.save(file_path)
 
             if 'editor' in req.POST:
                 if req.POST['editor']:
@@ -197,6 +214,12 @@ def editDoc(req, id):
                         return redirect("work", page="templates", message="Документ сохранён!")
                     else:
                         messages.append("Присутствуют не все директивы!")
+
+            if 'editor_delete' in req.POST:
+                document = Template.objects.get(id = id)
+                document.is_exist = False
+                document.save()
+                return redirect("work", page="templates", message="Документ удален!")
 
         document = Template.objects.get(id = id)
         if document:
@@ -242,13 +265,7 @@ def editDoc(req, id):
 def newDoc(req, id):
     messages = []
     urlSignature = ''
-    system_directives = [
-        {'name': 'current_date', 'desc': 'Текущая дата(подставляется автоматически)'},
-        {'name': 'disclaimer', 'desc': 'дисклеймер'},
-        {'name': 'client_name', 'desc': 'ФИО клиента'},
-        {'name': 'client_phone', 'desc': 'Номер телефона клиента'},
-        {'name': 'client_email', 'desc': 'E-mail клиента'}
-    ]
+    system_directives = SystemDirective.objects.all().values()
 
     try:
         if req.method == 'POST':
@@ -276,7 +293,6 @@ def newDoc(req, id):
                     file_path_ = file_path.replace('templates', 'signatured')
 
                     try:
-                        print(file_path_)
                         os.makedirs(file_path_.replace(file_path_.split('/')[-1], ''))
                     except Exception as e:
                         print(e)
@@ -289,10 +305,11 @@ def newDoc(req, id):
                     signature.file = File(file, file_path_.split('/')[-1])
                     signature.save()
                     urlSignature = str(req.build_absolute_uri().replace('editTemplate', 'signature')).replace('/' + str(id), '/' + str(signature.id)).replace('newDoc', 'signature').split('?')[0]
+                    print(str(req.build_absolute_uri().replace('editTemplate', 'signature')), urlSignature)
                     img = qrcode.make(urlSignature)
                     path_img = os.path.join(settings.BASE_DIR, 'static/img/qr.png')
                     img.save(path_img)
-                    messages.append("Договор выставлен на подпись. Ссылка скопирована в буффер обмена:<br>" + urlSignature + """<br><img src="/static/img/qr.png" style="transform: scale(0.75); margin: 0 -25px;">""")
+                    messages.append("Договор выставлен на подпись. Передайте эту ссылку или qr код клиенту<br>" + urlSignature + """<br><img src="/static/img/qr.png" style="transform: scale(0.75); margin: 0 -25px;">""")
                     delete_link_after_20_min = Timer(60.0*20.0, delete, [signature])
                     delete_link_after_20_min.start()
                     
@@ -360,6 +377,7 @@ def newDoc(req, id):
 
 def signatureDoc(req, id):
     sign_doc = SignatureDocx.objects.get(id = id)
+    messages = []
 
     if req.user.is_authenticated and not(sign_doc.client_id):
         if not('sms' in req.POST):
@@ -368,7 +386,6 @@ def signatureDoc(req, id):
             res = auth.authenticate(req.user.phone, req.POST['sms'])
             if res != None:
                 document = SignatureDocx.objects.get(id = id)
-                print(document)
                 if document: 
                     file_path = str(document.file.path).replace("\\", '/')
 
@@ -379,10 +396,11 @@ def signatureDoc(req, id):
                 data = {}
 
                 data['current_date'] = datetime.date.today().strftime("%d.%m.%Y")
-                data['disclaimer'] = 'Дисклеймер(будет доделано позже)'
+                data['disclaimer'] = SystemDirective.objects.get(name = 'disclaimer').default_value
                 data['client_name'] = req.user
                 data['client_phone'] = req.user.phone
                 data['client_email'] = req.user.email
+                data['contract_number'] = id
 
                 file = DocxTemplate(file_path)
                 file.render(data)
@@ -413,6 +431,10 @@ def signatureDoc(req, id):
                     'text': html.value
                 })
 
+            else:
+                messages.append("Неверный смс код! <br>Попробуйте еще раз")
+                
+
         document = SignatureDocx.objects.get(id = id)
         if document:
             file_path = str(document.file.path).replace("\\", '/')
@@ -422,14 +444,16 @@ def signatureDoc(req, id):
             text = str(html.value)
 
             text = text.replace('{{current_date}}',  datetime.date.today().strftime("%d.%m.%Y"))
-            text = text.replace('{{disclaimer}}', 'Дисклеймер(будет доделано позже)')
+            text = text.replace('{{disclaimer}}', SystemDirective.objects.get(name = 'disclaimer').default_value)
             text = text.replace('{{client_name}}', req.user.name)
             text = text.replace('{{client_phone}}',  req.user.phone)
             text = text.replace('{{client_email}}',  req.user.email)
+            text = text.replace('{{contract_number}}', str(id))
             
         return render(req, 'work/signature.html', 
                 {
-                    'text': text
+                    'text': text,
+                    'messages': messages
                 })
 
     else:

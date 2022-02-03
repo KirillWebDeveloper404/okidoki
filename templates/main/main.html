@@ -1,13 +1,45 @@
 {% extends "../base.html" %}
 {% load static %}
 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+<link href="{% static 'main.css' %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{% static 'navbar.css' %}">
+
+{% block bg %}
+  
+{% endblock bg %}
+
 {% block main %}
 
 {% block nav %}
-  
+<nav style="background-color: rgba(0, 0, 0, 0);" class="header header__container fixed mt-5">
+  <div class="row">
+    <div class="col"><div class="ml-5"><div class="header__logo"><a href="/"><img src="{% static 'img/logo-full-dark.svg' %}" alt="OkiDoki logo"/></a></div></div></div>
+
+    <div class="col">
+      <div class="menu-burger__header ml-auto mr-5">
+        <span></span>
+      </div>
+    </div>
+ 
+
+  <div class="header__nav" id="navbarSupportedContent">
+    <ul class="menu header__menu">
+        <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: white; font-weight: bold;">Возможности</a></li>
+        <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: white; font-weight: bold;">Цены</a></li>
+        <li class="menu__item" style="margin-left: 50px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; background-color: white; border-radius: 25px; width: 150px; height: 50px; font-weight: bold; text-align: center; padding-top: 15px;">Контакты</a></li>
+        {% if request.user.is_authenticated %}
+            <li class="nav-item menu__item" style="margin-left: 50px; margin-top: 10px;"><a class="nav-link nav-text" href="/work/settings" style="color: white; font-weight: bold;">Профиль</a></li>
+        {% endif %}
+        {% if request.user.is_authenticated == False %}
+          <li class="nav-item menu__item" style="margin-left: 50px;  margin-top: 10px;"><a class="nav-link nav-text" style="color: white; font-weight: bold;" data-toggle="modal" data-target="#myModal">Войти</a></li>
+        {% endif %}
+    </ul>
+  </div>
+  </div>
+
+</nav>
 {% endblock nav %}
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-<link href="{% static 'main.css' %}" rel="stylesheet" type="text/css" />
 
 <div class="modal fade loginModal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -33,48 +65,20 @@
 </div>
 
 <div class="mainPage">
-  <nav class="header header__container fixed mt-5">
-    <div class="row">
-      <div class="col"><div class="ml-5"><a href="/"><img src="{% static 'img/logo-full-dark.svg' %}" alt="OkiDoki logo" /></a></div></div>
-
-      <div class="col">
-        <div class="menu-burger__header ml-auto mr-5">
-          <span></span>
-        </div>
-      </div>
-   
-
-    <div class="mr-auto header__nav" id="navbarSupportedContent">
-      <ul class="ml-auto menu header__menu">
-          <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: white; font-weight: bold;">Возможности</a></li>
-          <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: white; font-weight: bold;">Цены</a></li>
-          <li class="menu__item" style="margin-left: 50px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; background-color: white; border-radius: 25px; width: 150px; height: 50px; font-weight: bold; text-align: center; padding-top: 15px;">Контакты</a></li>
-          {% if request.user.is_authenticated %}
-              <li class="nav-item menu__item" style="margin-left: 50px; margin-top: 10px;"><a class="nav-link nav-text" href="/work/settings" style="color: white; font-weight: bold;">Профиль</a></li>
-          {% endif %}
-          {% if request.user.is_authenticated == False %}
-            <li class="nav-item menu__item" style="margin-left: 50px;  margin-top: 10px;"><a class="nav-link nav-text" style="color: white; font-weight: bold;" data-toggle="modal" data-target="#myModal">Войти</a></li>
-          {% endif %}
-      </ul>
-    </div>
-    </div>
-
-  </nav>
-
     <img src="{% static 'img/pages/main/bg-vector-1.svg' %}" alt="" class="bg-vector-1" />
 
-    <div class="headers-container" style="margin-top: 250px;">
+    <div class="headers-container" style="margin-top: 200px;">
       <h1>Электронный договор для вашего бизнеса</h1>
       <h2>
         ОкіDокі простой и удобный сервис для передачи и подписи договора вашими клиентам. Забудьте про кипы архивов, принтерах и заваленных договорами полках!
       </h2>
     
 
-      <button class="get-started-button" onclick="location.href='/accounts/register/'">
+      <button class="get-started-button" style="border: 0; border-radius: 5px;" onclick="location.href='/accounts/register/'">
         Начать бесплатно
       </button>
     </div>
-    <img src="{% static 'img/pages/main/project-screenshots.png' %}" alt="" class="project-screenshots" />
+    <div class="project-screenshots"><img src="{% static 'img/pages/main/project-screenshots.png' %}" alt="" /></div>
 
     <img src="{% static 'img/pages/main/bg-vector-2.svg' %}" alt="" class="bg-vector-2" />
 </div>

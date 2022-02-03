@@ -3,23 +3,61 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no" />
     <title>OkiDoki</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'main.css' %}">
     <link rel="stylesheet" href="{% static 'accounts.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/gliroy/stylesheet.css' %}">
     <link href="{% static 'navbar.css' %}" rel="stylesheet" type="text/css" />
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.maskedinput@1.4.1/src/jquery.maskedinput.min.js" type="text/javascript"></script>
 </head>
 <body>
 
+  {% block bg %}
+    <link href="{% static 'main.css' %}" rel="stylesheet" type="text/css" />
+    <img src="{% static 'img/bg-vector-2.svg' %}" alt="" class="bg-vector-1 fixed" />
+
+  {% endblock bg %}
+
+  <div style="position: absolute; top: 3vh; left: 0; width: 100%; z-index: 999;">
+    {% for message in messages %}
+      <div class="d-lg-none" id="message">
+        <div style="width: 90vw; margin: 10px auto; border-radius: 15px; box-shadow: 0 0 30px rgb(34 34 34 / 30%); text-decoration: none; color: #000; z-index: 99999; background-color: #fff;">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-10">
+                <a style="color:#000; font-size: 50pt; word-wrap: break-word;">
+                  {% autoescape off %}
+                    {{message}}
+                  {% endautoescape %}
+                </a>  
+              </div>
+              <div class="col">
+                <button type="button" style="transform: scale(3); border: 0;" name='close' class="ml-auto mb-1 close" data-dismiss="toast" aria-label="Close" onclick="
+                var message = document.getElementById('message');
+                message.parentNode.removeChild(message);
+                "><span aria-hidden="true">&times;</span></button>
+              </div>
+            </div>   
+          </div>
+        </div>
+      </div>        
+    {% endfor %}
+  </div>
+
     {% block nav %}
-      <nav class="header header__container navbar navbar-expand-lg navbar-light ml-5 mr-5 mt-4 ">
-        <a class="navbar-brand fixed mt-3 ml-5" style="width: 100px;" href="/"><img src="{% static 'img/logo-full.svg' %}" alt="OkiDoki logo" /></a>
+      <nav style="background-color: rgba(0, 0, 0, 0);" class="header header__container navbar navbar-expand-lg navbar-light d-none d-lg-block">
+        <a class="navbar-brand mt-3 ml-5" style="width: 100px;" href="/"><img src="{% static 'img/logo-full.svg' %}" alt="OkiDoki logo" /></a>
         
         <div class="menu-burger__header light ml-auto">
           <span></span>
         </div>
     
-        <div class="mr-auto header__nav mt-3" id="navbarSupportedContent" style="background-color: #fff;">
+        <div class="header__nav" id="navbarSupportedContent" style="background-color: #fff;">
           <ul class="ml-auto menu header__menu">
               <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Возможности</a></li>
               <li class="menu__item" style="margin-left: 50px; margin-top: 10px;"><a href="#" class="nav-link nav-text" style="color: #3333a9; font-weight: bold;">Цены</a></li>
@@ -35,24 +73,26 @@
       </nav>
     {% endblock nav %}
 
-    {% for message in messages  %}
-      <div class="toast_" id="toast" role="alert" aria-live="assertive" style="position: fixed; right: 5%; bottom: 17%; z-index: 1;">
-          <div class="toast-header">
-          <img src="{% static 'img/logo-full.svg' %}" class="rounded mr-2">
-          <button type="button" name='close' class="ml-auto mb-1 close" data-dismiss="toast" aria-label="Close" onclick="
-          var message = document.getElementById('toast');
-          message.parentNode.removeChild(message);
-          ">
-              <span aria-hidden="true">&times;</span>
-          </button>
-          </div>
-          <div class="toast-body">
-            {% autoescape off %}
-              {{message}}
-            {% endautoescape %}
-          </div>
-      </div>
-    {% endfor %}
+    <div style="position: absolute; bottom: 10vh; right: 5vw; z-index: 999;">
+      {% for message in messages  %}
+        <div class="toast_ d-none d-lg-block" id="toast" role="alert" aria-live="assertive" style="margin-left: auto; z-index: 999;">
+            <div class="toast-header">
+            <img src="{% static 'img/logo-full.svg' %}" class="rounded mr-2">
+            <button type="button" name='close' class="ml-auto mb-1 close" data-dismiss="toast" aria-label="Close" onclick="
+            var message = document.getElementById('toast');
+            message.parentNode.removeChild(message);
+            ">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="toast-body">
+              {% autoescape off %}
+                {{message}}
+              {% endautoescape %}
+            </div>
+        </div>
+      {% endfor %}
+    </div>
     
     {% if request.user.is_authenticated %}
       {% block work %}
@@ -63,29 +103,6 @@
     {% block main %}
         
     {% endblock main %}
-
-    {% block footer %}
-    <footer style="display: flex; border-top: 1px solid #eee; font-size: 10pt; padding: 15px 30px; margin: 200px auto; width: 100%;">
-      <div class="row" style="margin: 0 auto;">
-
-        <div class="col">
-          <img src="{% static 'img/logo-full.svg' %}" class="footer-logo" alt="OkiDoki">
-        </div>
-
-        <div class="col-6">
-            <span>Мы в социальных сетях:</span>
-            <a href="#"><img viewBox="0 0 24 24" class="__telegram" style="margin-left: 30px;" src="{% static 'img/vk.svg' %}"></img></a>
-            <a href="#"><img viewBox="0 0 24 24" class="__telegram" style="margin-left: 0;" src="{% static 'img/telegram.svg' %}"></img></a>
-            <a href="#"><img viewBox="0 0 24 24" class="__telegram" style="margin-left: 0;" src="{% static 'img/facebook.svg' %}"></img></a>
-        </div>
-
-        <div class="col" style="margin-left: 150px;">
-          <div>Copyright © 2021 OkiDoki. Все права защищены</div>
-        </div>
-      </div>
-    </footer>    
-    <img src="{% static 'img/bg-vector-2.svg' %}" alt="" class="bg-vector-1 fixed" />
-    {% endblock footer %}
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -105,6 +122,13 @@
         window.history.replaceState( null, null, window.location.href );
     }
   </script>
+
+
+<style>
+  input, select, select:focus, textarea:focus, input:focus{
+    font-size: 16px !important;
+  }
+</style>
 
 </body>
 </html>
